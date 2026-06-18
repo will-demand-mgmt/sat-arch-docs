@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Satellite Capacity Orchestration — Architecture</title>
+<style>
+  :root {
+    --bg: #0c0f1a;
+    --bg2: #111827;
+    --bg3: #1a2235;
+    --border: rgba(99,120,180,0.18);
+    --border-hover: rgba(99,120,180,0.45);
+    --text: #e2e8f4;
+    --text-muted: #7a8aaa;
+    --text-dim: #4a5570;
+    --accent: #3b6fd4;
+    --accent-glow: rgba(59,111,212,0.18);
+    --teal: #1d9e75;
+    --teal-light: #9fe1cb;
+    --amber: #ba7517;
+    --amber-light: #fac775;
+    --coral: #d85a30;
+    --coral-light: #f5c4b3;
+    --purple: #7f77dd;
+    --purple-light: #afa9ec;
+    --green: #3b6d11;
+    --green-light: #c0dd97;
+    --red: #a32d2d;
+    --red-light: #f7c1c1;
+    --gray: #5f5e5a;
+    --gray-light: #d3d1c7;
+    --font: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    padding: 48px 40px 32px;
+    border-bottom: 1px solid var(--border);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .eyebrow {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 14px;
+    max-width: 560px;
+  }
+
+  /* ── Nav tabs ── */
+  nav {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    padding: 14px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    user-select: none;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+
+  /* ── Main layout ── */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 40px 64px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* ── Diagram panel ── */
+  .diagram-wrap {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    overflow: hidden;
+  }
+  .diagram-wrap svg { display: block; width: 100%; }
+
+  /* SVG node interactivity */
+  .node { cursor: pointer; }
+  .node rect, .node circle { transition: filter 0.15s, opacity 0.15s; }
+  .node:hover rect, .node:hover circle { filter: brightness(1.12); }
+  .node.active rect { filter: brightness(1.18); stroke-width: 1.5px !important; }
+
+  /* ── Detail panel ── */
+  .detail-panel {
+    position: sticky;
+    top: 24px;
+  }
+  .detail-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .detail-card.has-content { border-color: var(--border-hover); }
+  .detail-header {
+    padding: 16px 20px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .detail-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+  .detail-card.has-content .detail-dot { background: var(--accent); }
+  .detail-title {
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .detail-body {
+    padding: 20px;
+    min-height: 120px;
+  }
+  .detail-placeholder {
+    color: var(--text-dim);
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.6;
+  }
+  .detail-component { display: none; }
+  .detail-component.visible { display: block; }
+  .detail-component h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .detail-component p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+  .detail-component p:last-child { margin-bottom: 0; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .tag {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .tag.accent { border-color: rgba(59,111,212,0.4); color: #7aa4f0; }
+  .tag.teal { border-color: rgba(29,158,117,0.4); color: var(--teal-light); }
+  .tag.amber { border-color: rgba(186,117,23,0.4); color: var(--amber-light); }
+  .tag.coral { border-color: rgba(216,90,48,0.4); color: var(--coral-light); }
+  .tag.purple { border-color: rgba(127,119,221,0.4); color: var(--purple-light); }
+  .tag.green { border-color: rgba(59,109,17,0.4); color: var(--green-light); }
+  .tag.red { border-color: rgba(163,45,45,0.4); color: var(--red-light); }
+
+  /* ── Legend ── */
+  .legend {
+    margin-top: 16px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 20px;
+  }
+  .legend-title {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .legend-items { display: flex; flex-direction: column; gap: 7px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
+  .legend-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ── Tab panels ── */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Responsive ── */
+  @media (max-width: 800px) {
+    main { grid-template-columns: 1fr; }
+    header, nav, main { padding-left: 20px; padding-right: 20px; }
+    .detail-panel { position: static; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Architecture Reference</div>
+  <h1>Satellite Capacity Orchestration</h1>
+  <p class="subtitle">Interactive system architecture — click any component to explore its role, responsibilities, and downstream dependencies.</p>
+</header>
+
+<nav>
+  <div class="tab active" data-tab="overview">System overview</div>
+  <div class="tab" data-tab="beam">Beam eligibility flow</div>
+</nav>
+
+<main>
+
+  <!-- ════════ TAB: OVERVIEW ════════ -->
+  <div class="tab-panel active" id="panel-overview">
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 640 860" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#4a5570" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+          <marker id="arr-accent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#3b6fd4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <!-- L1: External Clients -->
+        <g class="node" data-id="clients" onclick="showDetail('clients',this)">
+          <rect x="20" y="16" width="600" height="52" rx="8" fill="#1a2235" stroke="#3b5a9a" stroke-width="0.6"/>
+          <text x="320" y="36" text-anchor="middle" fill="#a0b0d0" font-size="11" font-family="monospace" letter-spacing="0.08em">EXTERNAL CLIENTS</text>
+          <text x="320" y="55" text-anchor="middle" fill="#6a7fa8" font-size="12">Customer OSS / Partner systems — REST API (OAuth2)</text>
+        </g>
+
+        <line x1="320" y1="68" x2="320" y2="88" stroke="#4a5570" stroke-width="1" marker-end="url(#arr)"/>
+        <text x="334" y="81" fill="#4a5570" font-size="11">Bearer token</text>
+
+        <!-- L2: API Management -->
+        <g class="node" data-id="apigw" onclick="showDetail('apigw',this)">
+          <rect x="20" y="88" width="600" height="64" rx="8" fill="#0f1e38" stroke="#1e3d6e" stroke-width="0.6"/>
+          <text x="320" y="110" text-anchor="middle" fill="#7aa4f0" font-size="13" font-weight="600">API Management</text>
+          <text x="140" y="130" text-anchor="middle" fill="#4a6090" font-size="11">AuthN / AuthZ</text>
+          <text x="320" y="130" text-anchor="middle" fill="#4a6090" font-size="11">Rate limiting</text>
+          <text x="500" y="130" text-anchor="middle" fill="#4a6090" font-size="11">Schema validation</text>
+          <line x1="220" y1="116" x2="220" y2="144" stroke="#1e3d6e" stroke-width="0.5"/>
+          <line x1="420" y1="116" x2="420" y2="144" stroke="#1e3d6e" stroke-width="0.5"/>
+        </g>
+
+        <line x1="320" y1="152" x2="320" y2="172" stroke="#4a5570" stroke-width="1" marker-end="url(#arr)"/>
+
+        <!-- L3: Orchestration -->
+        <rect x="20" y="172" width="600" height="248" rx="10" fill="#140d2e" stroke="#3d3580" stroke-width="0.6"/>
+        <text x="320" y="198" text-anchor="middle" fill="#9990e8" font-size="13" font-weight="600">Orchestration &amp; Domain Layer</text>
+
+        <g class="node" data-id="saga" onclick="showDetail('saga',this)">
+          <rect x="36" y="210" width="176" height="96" rx="6" fill="#1a1540" stroke="#4a4298" stroke-width="0.6"/>
+          <text x="124" y="234" text-anchor="middle" fill="#c0b8f8" font-size="12" font-weight="600">Orchestration engine</text>
+          <text x="124" y="253" text-anchor="middle" fill="#6a62b0" font-size="11">Saga / state machine</text>
+          <text x="124" y="270" text-anchor="middle" fill="#6a62b0" font-size="11">validate → decide → commit</text>
+          <text x="124" y="287" text-anchor="middle" fill="#6a62b0" font-size="11">Retry · timeout · rollback</text>
+        </g>
+
+        <g class="node" data-id="validation" onclick="showDetail('validation',this)">
+          <rect x="232" y="210" width="176" height="96" rx="6" fill="#1a1540" stroke="#4a4298" stroke-width="0.6"/>
+          <text x="320" y="234" text-anchor="middle" fill="#c0b8f8" font-size="12" font-weight="600">Validation engine</text>
+          <text x="320" y="253" text-anchor="middle" fill="#6a62b0" font-size="11">Contract (GCRM)</text>
+          <text x="320" y="270" text-anchor="middle" fill="#6a62b0" font-size="11">Beam eligibility (OSS)</text>
+          <text x="320" y="287" text-anchor="middle" fill="#6a62b0" font-size="11">Capacity check (CAPI)</text>
+        </g>
+
+        <g class="node" data-id="decision" onclick="showDetail('decision',this)">
+          <rect x="428" y="210" width="176" height="96" rx="6" fill="#1a1540" stroke="#4a4298" stroke-width="0.6"/>
+          <text x="516" y="234" text-anchor="middle" fill="#c0b8f8" font-size="12" font-weight="600">Decision engine</text>
+          <text x="516" y="255" text-anchor="middle" fill="#6a62b0" font-size="11">APPROVED</text>
+          <text x="516" y="272" text-anchor="middle" fill="#6a62b0" font-size="11">PARTIAL → alt. proposal</text>
+          <text x="516" y="289" text-anchor="middle" fill="#6a62b0" font-size="11">REJECTED + reason</text>
+        </g>
+
+        <line x1="212" y1="258" x2="230" y2="258" stroke="#4a4298" stroke-width="0.8" marker-end="url(#arr)"/>
+        <line x1="408" y1="258" x2="426" y2="258" stroke="#4a4298" stroke-width="0.8" marker-end="url(#arr)"/>
+
+        <text x="124" y="334" text-anchor="middle" fill="#3d3570" font-size="11">① initiate workflow</text>
+        <text x="320" y="334" text-anchor="middle" fill="#3d3570" font-size="11">② validate constraints</text>
+        <text x="516" y="334" text-anchor="middle" fill="#3d3570" font-size="11">③ emit outcome</text>
+
+        <!-- Divider + event note -->
+        <line x1="36" y1="354" x2="604" y2="354" stroke="#2a2050" stroke-width="0.5" stroke-dasharray="3 3"/>
+        <text x="124" y="372" text-anchor="middle" fill="#3d3570" font-size="11">Compensation on failure</text>
+        <text x="320" y="372" text-anchor="middle" fill="#3d3570" font-size="11">Idempotent steps</text>
+        <text x="516" y="372" text-anchor="middle" fill="#3d3570" font-size="11">Event on every outcome</text>
+
+        <!-- Arrows from orch down -->
+        <line x1="180" y1="420" x2="145" y2="460" stroke="#4a5570" stroke-width="1" marker-end="url(#arr)"/>
+        <line x1="460" y1="420" x2="495" y2="460" stroke="#4a5570" stroke-width="1" marker-end="url(#arr)"/>
+
+        <!-- L4 Left: State -->
+        <g class="node" data-id="state" onclick="showDetail('state',this)">
+          <rect x="20" y="460" width="270" height="104" rx="8" fill="#1f100a" stroke="#6e3018" stroke-width="0.6"/>
+          <text x="155" y="484" text-anchor="middle" fill="#f0a070" font-size="13" font-weight="600">State &amp; Data</text>
+          <text x="155" y="504" text-anchor="middle" fill="#8a5030" font-size="11">Request DB (state machine)</text>
+          <text x="155" y="520" text-anchor="middle" fill="#8a5030" font-size="11">Contract cache · capacity snapshot</text>
+          <text x="155" y="536" text-anchor="middle" fill="#8a5030" font-size="11">Immutable audit log</text>
+          <text x="155" y="552" text-anchor="middle" fill="#6a3820" font-size="11">PENDING → VALIDATING → COMMITTED</text>
+        </g>
+
+        <!-- L4 Right: Events -->
+        <g class="node" data-id="events" onclick="showDetail('events',this)">
+          <rect x="350" y="460" width="270" height="104" rx="8" fill="#1a1400" stroke="#5a4800" stroke-width="0.6"/>
+          <text x="485" y="484" text-anchor="middle" fill="#e8c060" font-size="13" font-weight="600">Event backbone</text>
+          <text x="485" y="504" text-anchor="middle" fill="#786020" font-size="11">request.received</text>
+          <text x="485" y="520" text-anchor="middle" fill="#786020" font-size="11">request.approved / .rejected</text>
+          <text x="485" y="536" text-anchor="middle" fill="#786020" font-size="11">capacity.reserved</text>
+          <text x="485" y="552" text-anchor="middle" fill="#5a4818" font-size="11">Pub/Sub · async communication</text>
+        </g>
+
+        <!-- Arrows down to integration -->
+        <line x1="155" y1="564" x2="200" y2="596" stroke="#4a5570" stroke-width="1" marker-end="url(#arr)"/>
+        <line x1="485" y1="564" x2="440" y2="596" stroke="#4a5570" stroke-width="1" marker-end="url(#arr)"/>
+
+        <!-- L5: Integration -->
+        <rect x="20" y="596" width="600" height="164" rx="8" fill="#0a1a1a" stroke="#0e4a3a" stroke-width="0.6"/>
+        <text x="320" y="620" text-anchor="middle" fill="#70d4b0" font-size="13" font-weight="600">Integration Layer — Adapters</text>
+
+        <g class="node" data-id="gcrm" onclick="showDetail('gcrm',this)">
+          <rect x="34" y="632" width="100" height="60" rx="5" fill="#0a2a22" stroke="#0e4a3a" stroke-width="0.6"/>
+          <text x="84" y="656" text-anchor="middle" fill="#50c090" font-size="12" font-weight="600">GCRM</text>
+          <text x="84" y="674" text-anchor="middle" fill="#2a7050" font-size="11">Contracts</text>
+        </g>
+        <g class="node" data-id="capi" onclick="showDetail('capi',this)">
+          <rect x="148" y="632" width="100" height="60" rx="5" fill="#0a2a22" stroke="#0e4a3a" stroke-width="0.6"/>
+          <text x="198" y="656" text-anchor="middle" fill="#50c090" font-size="12" font-weight="600">CAPI</text>
+          <text x="198" y="674" text-anchor="middle" fill="#2a7050" font-size="11">Capacity inventory</text>
+        </g>
+        <g class="node" data-id="cp" onclick="showDetail('cp',this)">
+          <rect x="262" y="632" width="100" height="60" rx="5" fill="#0a2a22" stroke="#0e4a3a" stroke-width="0.6"/>
+          <text x="312" y="656" text-anchor="middle" fill="#50c090" font-size="12" font-weight="600">CP</text>
+          <text x="312" y="674" text-anchor="middle" fill="#2a7050" font-size="11">Capacity planner</text>
+        </g>
+        <g class="node" data-id="oss" onclick="showDetail('oss',this)">
+          <rect x="376" y="632" width="100" height="60" rx="5" fill="#0a2a22" stroke="#0e4a3a" stroke-width="0.6"/>
+          <text x="426" y="656" text-anchor="middle" fill="#50c090" font-size="12" font-weight="600">OSS / FP</text>
+          <text x="426" y="674" text-anchor="middle" fill="#2a7050" font-size="11">Frequency · beam</text>
+        </g>
+        <g class="node" data-id="mcm" onclick="showDetail('mcm',this)">
+          <rect x="490" y="632" width="110" height="60" rx="5" fill="#0a2a22" stroke="#0e4a3a" stroke-width="0.6"/>
+          <text x="545" y="656" text-anchor="middle" fill="#50c090" font-size="12" font-weight="600">MCM</text>
+          <text x="545" y="674" text-anchor="middle" fill="#2a7050" font-size="11">Mission segment</text>
+        </g>
+
+        <text x="320" y="740" text-anchor="middle" fill="#2a6050" font-size="11">Each adapter: retry · circuit breaker · data mapping · error handling</text>
+
+        <!-- Arrow to downstream -->
+        <line x1="320" y1="760" x2="320" y2="784" stroke="#4a5570" stroke-width="1" marker-end="url(#arr)"/>
+
+        <!-- L6: Downstream -->
+        <g class="node" data-id="downstream" onclick="showDetail('downstream',this)">
+          <rect x="20" y="784" width="600" height="52" rx="8" fill="#1a2235" stroke="#3b5a9a" stroke-width="0.6"/>
+          <text x="320" y="804" text-anchor="middle" fill="#7a8aaa" font-size="11" font-family="monospace" letter-spacing="0.06em">DOWNSTREAM SYSTEMS</text>
+          <text x="320" y="823" text-anchor="middle" fill="#4a5570" font-size="12">GCRM · CAPI · CP · OSS · MCM — independent systems of record</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ════════ TAB: BEAM ELIGIBILITY ════════ -->
+  <div class="tab-panel" id="panel-beam">
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 640 780" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#4a5570" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <!-- Incoming request -->
+        <g class="node" data-id="req-in" onclick="showDetail('req-in',this)">
+          <rect x="195" y="16" width="250" height="48" rx="8" fill="#1a2235" stroke="#3b5a9a" stroke-width="0.6"/>
+          <text x="320" y="36" text-anchor="middle" fill="#a0b0d0" font-size="11" font-family="monospace">INCOMING REQUEST</text>
+          <text x="320" y="53" text-anchor="middle" fill="#5a6a90" font-size="11">beam · freq · period · contract · qty</text>
+        </g>
+        <line x1="320" y1="64" x2="320" y2="88" stroke="#4a5570" stroke-width="1" marker-end="url(#arr2)"/>
+
+        <!-- Eligibility section -->
+        <rect x="20" y="88" width="600" height="228" rx="10" fill="#140d2e" stroke="#3d3580" stroke-width="0.6"/>
+        <text x="320" y="114" text-anchor="middle" fill="#9990e8" font-size="13" font-weight="600">Beam eligibility — 3 parallel checks</text>
+
+        <g class="node" data-id="geo-check" onclick="showDetail('geo-check',this)">
+          <rect x="36" y="126" width="170" height="88" rx="6" fill="#1a1540" stroke="#4a4298" stroke-width="0.6"/>
+          <text x="121" y="150" text-anchor="middle" fill="#c0b8f8" font-size="12" font-weight="600">Geographic check</text>
+          <text x="121" y="169" text-anchor="middle" fill="#6a62b0" font-size="11">Station inside footprint?</text>
+          <text x="121" y="186" text-anchor="middle" fill="#6a62b0" font-size="11">Source: OSS / Freq. Planning</text>
+          <text x="121" y="203" text-anchor="middle" fill="#4a4290" font-size="11">Geometric coverage calc</text>
+        </g>
+
+        <g class="node" data-id="contract-check" onclick="showDetail('contract-check',this)">
+          <rect x="235" y="126" width="170" height="88" rx="6" fill="#1a1540" stroke="#4a4298" stroke-width="0.6"/>
+          <text x="320" y="150" text-anchor="middle" fill="#c0b8f8" font-size="12" font-weight="600">Contract check</text>
+          <text x="320" y="169" text-anchor="middle" fill="#6a62b0" font-size="11">Contract authorises beam?</text>
+          <text x="320" y="186" text-anchor="middle" fill="#6a62b0" font-size="11">Source: GCRM</text>
+          <text x="320" y="203" text-anchor="middle" fill="#4a4290" font-size="11">Region · service tier</text>
+        </g>
+
+        <g class="node" data-id="tech-check" onclick="showDetail('tech-check',this)">
+          <rect x="434" y="126" width="170" height="88" rx="6" fill="#1a1540" stroke="#4a4298" stroke-width="0.6"/>
+          <text x="519" y="150" text-anchor="middle" fill="#c0b8f8" font-size="12" font-weight="600">Technical check</text>
+          <text x="519" y="169" text-anchor="middle" fill="#6a62b0" font-size="11">Freq · polarisation · service</text>
+          <text x="519" y="186" text-anchor="middle" fill="#6a62b0" font-size="11">Source: OSS</text>
+          <text x="519" y="203" text-anchor="middle" fill="#4a4290" font-size="11">Physical compatibility</text>
+        </g>
+
+        <!-- All pass? -->
+        <g class="node" data-id="elig-gate" onclick="showDetail('elig-gate',this)">
+          <rect x="210" y="244" width="220" height="44" rx="8" fill="#1a1a2a" stroke="#4a5570" stroke-width="0.6"/>
+          <text x="320" y="261" text-anchor="middle" fill="#9090c0" font-size="12" font-weight="600">All 3 checks passed?</text>
+          <text x="320" y="278" text-anchor="middle" fill="#5a5a80" font-size="11">Any failure → seek alt. beam</text>
+        </g>
+
+        <line x1="121" y1="214" x2="258" y2="244" stroke="#4a4298" stroke-width="0.8" marker-end="url(#arr2)"/>
+        <line x1="320" y1="214" x2="320" y2="244" stroke="#4a4298" stroke-width="0.8" marker-end="url(#arr2)"/>
+        <line x1="519" y1="214" x2="382" y2="244" stroke="#4a4298" stroke-width="0.8" marker-end="url(#arr2)"/>
+
+        <!-- NO branch -->
+        <path d="M210 266 L100 266 L100 310" fill="none" stroke="#7a3030" stroke-width="0.8" marker-end="url(#arr2)"/>
+        <g class="node" data-id="alt-beam" onclick="showDetail('alt-beam',this)">
+          <rect x="20" y="310" width="160" height="44" rx="6" fill="#2a1010" stroke="#6a2020" stroke-width="0.6"/>
+          <text x="100" y="328" text-anchor="middle" fill="#e07070" font-size="12" font-weight="600">Not eligible</text>
+          <text x="100" y="344" text-anchor="middle" fill="#7a3030" font-size="11">→ alt. beam proposal</text>
+        </g>
+        <text x="154" y="260" fill="#6a3030" font-size="11">NO</text>
+
+        <!-- YES -->
+        <line x1="320" y1="288" x2="320" y2="328" stroke="#4a5570" stroke-width="1" marker-end="url(#arr2)"/>
+        <text x="330" y="312" fill="#3a6a3a" font-size="11">YES</text>
+
+        <!-- Capacity section -->
+        <rect x="20" y="328" width="600" height="248" rx="10" fill="#0a1a1a" stroke="#0e4a3a" stroke-width="0.6"/>
+        <text x="320" y="354" text-anchor="middle" fill="#70d4b0" font-size="13" font-weight="600">Capacity availability — 3 systems in sequence</text>
+
+        <g class="node" data-id="capi-check" onclick="showDetail('capi-check',this)">
+          <rect x="36" y="366" width="170" height="88" rx="6" fill="#0a2a22" stroke="#0e4a3a" stroke-width="0.6"/>
+          <text x="121" y="390" text-anchor="middle" fill="#70d4b0" font-size="12" font-weight="600">1. CAPI</text>
+          <text x="121" y="409" text-anchor="middle" fill="#2a7050" font-size="11">Capacity inventory</text>
+          <text x="121" y="426" text-anchor="middle" fill="#2a7050" font-size="11">Current beam snapshot</text>
+          <text x="121" y="443" text-anchor="middle" fill="#1a5038" font-size="11">Instantaneous view</text>
+        </g>
+
+        <g class="node" data-id="cp-check" onclick="showDetail('cp-check',this)">
+          <rect x="235" y="366" width="170" height="88" rx="6" fill="#0a2a22" stroke="#0e4a3a" stroke-width="0.6"/>
+          <text x="320" y="390" text-anchor="middle" fill="#70d4b0" font-size="12" font-weight="600">2. CP</text>
+          <text x="320" y="409" text-anchor="middle" fill="#2a7050" font-size="11">Capacity planner</text>
+          <text x="320" y="426" text-anchor="middle" fill="#2a7050" font-size="11">Bookings in time window</text>
+          <text x="320" y="443" text-anchor="middle" fill="#1a5038" font-size="11">Future commitments</text>
+        </g>
+
+        <g class="node" data-id="mcm-check" onclick="showDetail('mcm-check',this)">
+          <rect x="434" y="366" width="170" height="88" rx="6" fill="#0a2a22" stroke="#0e4a3a" stroke-width="0.6"/>
+          <text x="519" y="390" text-anchor="middle" fill="#70d4b0" font-size="12" font-weight="600">3. MCM</text>
+          <text x="519" y="409" text-anchor="middle" fill="#2a7050" font-size="11">Mission segment</text>
+          <text x="519" y="426" text-anchor="middle" fill="#2a7050" font-size="11">Operational constraints</text>
+          <text x="519" y="443" text-anchor="middle" fill="#1a5038" font-size="11">Maintenance · priority</text>
+        </g>
+
+        <line x1="206" y1="410" x2="233" y2="410" stroke="#0e4a3a" stroke-width="0.8" marker-end="url(#arr2)"/>
+        <line x1="405" y1="410" x2="432" y2="410" stroke="#0e4a3a" stroke-width="0.8" marker-end="url(#arr2)"/>
+
+        <!-- Sufficient? -->
+        <g class="node" data-id="cap-gate" onclick="showDetail('cap-gate',this)">
+          <rect x="185" y="490" width="270" height="44" rx="8" fill="#1a1a2a" stroke="#4a5570" stroke-width="0.6"/>
+          <text x="320" y="507" text-anchor="middle" fill="#9090c0" font-size="12" font-weight="600">Capacity sufficient?</text>
+          <text x="320" y="524" text-anchor="middle" fill="#5a5a80" font-size="11">Requested qty vs available qty</text>
+        </g>
+
+        <line x1="121" y1="454" x2="240" y2="490" stroke="#0e4a3a" stroke-width="0.8" marker-end="url(#arr2)"/>
+        <line x1="320" y1="454" x2="320" y2="490" stroke="#0e4a3a" stroke-width="0.8" marker-end="url(#arr2)"/>
+        <line x1="519" y1="454" x2="400" y2="490" stroke="#0e4a3a" stroke-width="0.8" marker-end="url(#arr2)"/>
+
+        <!-- Three outcomes -->
+        <line x1="255" y1="534" x2="130" y2="570" stroke="#4a5570" stroke-width="0.8" marker-end="url(#arr2)"/>
+        <line x1="320" y1="534" x2="320" y2="570" stroke="#4a5570" stroke-width="0.8" marker-end="url(#arr2)"/>
+        <line x1="385" y1="534" x2="510" y2="570" stroke="#4a5570" stroke-width="0.8" marker-end="url(#arr2)"/>
+
+        <g class="node" data-id="approved" onclick="showDetail('approved',this)">
+          <rect x="36" y="570" width="170" height="44" rx="6" fill="#0a2010" stroke="#1a6028" stroke-width="0.6"/>
+          <text x="121" y="588" text-anchor="middle" fill="#70d090" font-size="13" font-weight="600">APPROVED</text>
+          <text x="121" y="604" text-anchor="middle" fill="#2a6038" font-size="11">capacity reserved</text>
+        </g>
+
+        <g class="node" data-id="partial" onclick="showDetail('partial',this)">
+          <rect x="235" y="570" width="170" height="44" rx="6" fill="#1a1400" stroke="#5a4808" stroke-width="0.6"/>
+          <text x="320" y="588" text-anchor="middle" fill="#e0c060" font-size="13" font-weight="600">PARTIAL</text>
+          <text x="320" y="604" text-anchor="middle" fill="#786020" font-size="11">reduced proposal</text>
+        </g>
+
+        <g class="node" data-id="rejected" onclick="showDetail('rejected',this)">
+          <rect x="434" y="570" width="170" height="44" rx="6" fill="#200a0a" stroke="#602020" stroke-width="0.6"/>
+          <text x="519" y="588" text-anchor="middle" fill="#e07070" font-size="13" font-weight="600">REJECTED</text>
+          <text x="519" y="604" text-anchor="middle" fill="#7a3030" font-size="11">no capacity available</text>
+        </g>
+
+        <!-- Event bus -->
+        <line x1="121" y1="614" x2="121" y2="644" stroke="#4a5570" stroke-width="0.8" marker-end="url(#arr2)"/>
+        <line x1="320" y1="614" x2="320" y2="644" stroke="#4a5570" stroke-width="0.8" marker-end="url(#arr2)"/>
+        <line x1="519" y1="614" x2="519" y2="644" stroke="#4a5570" stroke-width="0.8" marker-end="url(#arr2)"/>
+
+        <g class="node" data-id="event-out" onclick="showDetail('event-out',this)">
+          <rect x="20" y="644" width="600" height="52" rx="8" fill="#1a1400" stroke="#5a4808" stroke-width="0.6"/>
+          <text x="320" y="664" text-anchor="middle" fill="#c0a040" font-size="11" font-family="monospace">EVENT BACKBONE</text>
+          <text x="320" y="683" text-anchor="middle" fill="#786020" font-size="12">request.approved · request.partial · request.rejected</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ════════ SIDE PANEL ════════ -->
+  <div class="detail-panel">
+    <div class="detail-card" id="detail-card">
+      <div class="detail-header">
+        <div class="detail-dot" id="detail-dot"></div>
+        <span class="detail-title">Component detail</span>
+      </div>
+      <div class="detail-body">
+        <p class="detail-placeholder" id="detail-placeholder">Click any component on the diagram to see its role, responsibilities, and system dependencies.</p>
+
+        <!-- All detail entries -->
+        <div class="detail-component" id="d-clients">
+          <h3>External clients</h3>
+          <p>Customer OSS (Operations Support Systems) and partner systems that consume this API. They submit satellite capacity requests over REST, authenticated via OAuth2 Bearer tokens.</p>
+          <p>Typical payload: beam ID, frequency band, polarisation, requested time window, quantity of capacity, and a contract reference.</p>
+          <div class="tag-row"><span class="tag accent">REST</span><span class="tag accent">OAuth2</span><span class="tag">OSS</span><span class="tag">partner systems</span></div>
+        </div>
+
+        <div class="detail-component" id="d-apigw">
+          <h3>API Management</h3>
+          <p>The public entry point. Validates OAuth2 tokens, enforces per-client rate limits and throttling policies, and rejects malformed requests before they reach the domain layer.</p>
+          <p>Acts as a shield — the orchestration engine only sees well-formed, authenticated requests.</p>
+          <div class="tag-row"><span class="tag accent">AuthN/AuthZ</span><span class="tag">rate limiting</span><span class="tag">schema validation</span></div>
+        </div>
+
+        <div class="detail-component" id="d-saga">
+          <h3>Orchestration engine (Saga)</h3>
+          <p>Manages the full request lifecycle as a distributed saga. Coordinates the sequence: validate → decide → commit. Each step is idempotent, with explicit retry, timeout, and compensation logic in case a downstream call fails mid-flow.</p>
+          <p>If validation succeeds but the commit to CAPI fails, the saga triggers a rollback of any partial reservations already made.</p>
+          <div class="tag-row"><span class="tag purple">saga pattern</span><span class="tag">state machine</span><span class="tag">compensation</span><span class="tag">idempotency</span></div>
+        </div>
+
+        <div class="detail-component" id="d-validation">
+          <h3>Validation engine</h3>
+          <p>Runs three independent checks: contract validity (via GCRM), beam eligibility (via OSS), and capacity availability (via CAPI). All three must pass for the request to proceed to the decision stage.</p>
+          <div class="tag-row"><span class="tag teal">GCRM</span><span class="tag teal">OSS</span><span class="tag teal">CAPI</span></div>
+        </div>
+
+        <div class="detail-component" id="d-decision">
+          <h3>Decision engine</h3>
+          <p>Compares requested capacity against validated availability and produces one of three outcomes: <strong>APPROVED</strong> (full capacity available), <strong>PARTIAL</strong> (partial capacity available, alternative proposal generated), or <strong>REJECTED</strong> (no capacity, reason attached).</p>
+          <p>In PARTIAL/REJECTED cases, the engine may suggest an alternative beam, time window, or reduced allocation.</p>
+          <div class="tag-row"><span class="tag green">APPROVED</span><span class="tag amber">PARTIAL</span><span class="tag red">REJECTED</span></div>
+        </div>
+
+        <div class="detail-component" id="d-state">
+          <h3>State &amp; Data management</h3>
+          <p>Persists all request state transitions in a database acting as a state machine. States: <code>PENDING → VALIDATING → DECIDING → COMMITTED</code>.</p>
+          <p>Maintains a contract cache (to avoid repeated GCRM calls) and a capacity snapshot cache (to reduce CAPI load). All transitions are written to an immutable audit log.</p>
+          <div class="tag-row"><span class="tag coral">state machine</span><span class="tag">cache</span><span class="tag">audit log</span></div>
+        </div>
+
+        <div class="detail-component" id="d-events">
+          <h3>Event backbone</h3>
+          <p>Pub/Sub event bus for async communication between internal components and external consumers. Every significant state change produces an event.</p>
+          <p>Key events: <code>request.received</code>, <code>request.approved</code>, <code>request.rejected</code>, <code>capacity.reserved</code>.</p>
+          <div class="tag-row"><span class="tag amber">pub/sub</span><span class="tag">async</span><span class="tag">event-driven</span></div>
+        </div>
+
+        <div class="detail-component" id="d-gcrm">
+          <h3>GCRM adapter — Contracts</h3>
+          <p>Reads active customer contracts from the CRM system. Validates that the requested beam is within the contracted scope (region, service tier, authorised beams list).</p>
+          <div class="tag-row"><span class="tag teal">contract validation</span><span class="tag">retry</span><span class="tag">circuit breaker</span></div>
+        </div>
+
+        <div class="detail-component" id="d-capi">
+          <h3>CAPI adapter — Capacity inventory</h3>
+          <p>Queries the capacity inventory system for a real-time snapshot of available bandwidth on a given beam. Returns current free capacity before bookings are applied.</p>
+          <div class="tag-row"><span class="tag teal">inventory</span><span class="tag">snapshot</span><span class="tag">bandwidth</span></div>
+        </div>
+
+        <div class="detail-component" id="d-cp">
+          <h3>CP adapter — Capacity planner</h3>
+          <p>Queries the capacity planning system to account for existing bookings in the requested time window. Subtracts committed capacity from the CAPI snapshot to produce net available capacity.</p>
+          <div class="tag-row"><span class="tag teal">time window</span><span class="tag">bookings</span><span class="tag">net capacity</span></div>
+        </div>
+
+        <div class="detail-component" id="d-oss">
+          <h3>OSS / Frequency Planning adapter</h3>
+          <p>Interfaces with the Operations Support System for two checks: geographic footprint verification (is the ground station inside the beam coverage area?) and technical compatibility (frequency, polarisation, service type).</p>
+          <div class="tag-row"><span class="tag teal">footprint</span><span class="tag">frequency plan</span><span class="tag">polarisation</span></div>
+        </div>
+
+        <div class="detail-component" id="d-mcm">
+          <h3>MCM adapter — Mission segment</h3>
+          <p>Queries the Mission Control &amp; Management system for operational constraints: maintenance windows, orbital manoeuvre schedules, government or military priority reservations that override commercial availability.</p>
+          <div class="tag-row"><span class="tag teal">mission ops</span><span class="tag">priority windows</span><span class="tag">maintenance</span></div>
+        </div>
+
+        <div class="detail-component" id="d-downstream">
+          <h3>Downstream systems</h3>
+          <p>The independent legacy and third-party systems of record. The integration layer above them keeps all coupling contained in adapter code — the domain layer has no direct knowledge of their APIs or data formats.</p>
+          <div class="tag-row"><span class="tag">GCRM</span><span class="tag">CAPI</span><span class="tag">CP</span><span class="tag">OSS</span><span class="tag">MCM</span></div>
+        </div>
+
+        <!-- Beam flow specifics -->
+        <div class="detail-component" id="d-req-in">
+          <h3>Incoming request payload</h3>
+          <p>The raw request from an external client, containing: target beam ID, frequency band and polarisation, requested time window (start/end), capacity quantity (MHz or Mbps), and contract reference ID.</p>
+          <div class="tag-row"><span class="tag accent">beam ID</span><span class="tag accent">frequency</span><span class="tag accent">time window</span><span class="tag accent">contract ref</span></div>
+        </div>
+
+        <div class="detail-component" id="d-geo-check">
+          <h3>Geographic check</h3>
+          <p>Verifies that the customer's ground station coordinates fall within the satellite beam's footprint — the geographic area on Earth that the beam can serve. This is a geometric calculation against coverage maps maintained in OSS/Frequency Planning.</p>
+          <div class="tag-row"><span class="tag purple">OSS</span><span class="tag">footprint polygon</span><span class="tag">ground station</span></div>
+        </div>
+
+        <div class="detail-component" id="d-contract-check">
+          <h3>Contract check</h3>
+          <p>Reads the customer's active contract from GCRM and verifies that the requested beam is explicitly authorised. Contracts may restrict access by region, beam tier, or service type.</p>
+          <div class="tag-row"><span class="tag purple">GCRM</span><span class="tag">authorised beams</span><span class="tag">service tier</span></div>
+        </div>
+
+        <div class="detail-component" id="d-tech-check">
+          <h3>Technical check</h3>
+          <p>Confirms that the requested frequency, polarisation (horizontal/vertical/circular), and service type are physically compatible with the target beam's specification. A mismatch here means the signal cannot be transmitted or received correctly.</p>
+          <div class="tag-row"><span class="tag purple">OSS</span><span class="tag">frequency plan</span><span class="tag">polarisation</span></div>
+        </div>
+
+        <div class="detail-component" id="d-elig-gate">
+          <h3>Eligibility gate</h3>
+          <p>All three checks (geographic, contractual, technical) must pass. A single failure marks the beam as ineligible. The decision engine then searches for an alternative eligible beam before issuing a REJECTED response.</p>
+          <div class="tag-row"><span class="tag green">all pass → proceed</span><span class="tag red">any fail → alt. beam</span></div>
+        </div>
+
+        <div class="detail-component" id="d-alt-beam">
+          <h3>Alternative beam proposal</h3>
+          <p>When the requested beam is not eligible, the decision engine searches for nearby beams that satisfy all three checks and have sufficient capacity. If found, a PARTIAL response is returned with the alternative proposal. If not, REJECTED.</p>
+          <div class="tag-row"><span class="tag amber">PARTIAL</span><span class="tag red">REJECTED</span></div>
+        </div>
+
+        <div class="detail-component" id="d-capi-check">
+          <h3>CAPI — instantaneous snapshot</h3>
+          <p>Provides a real-time view of total bandwidth currently available on the beam, before any time-windowed bookings are applied. This is the ceiling from which committed capacity is subtracted.</p>
+          <div class="tag-row"><span class="tag teal">real-time</span><span class="tag">bandwidth ceiling</span></div>
+        </div>
+
+        <div class="detail-component" id="d-cp-check">
+          <h3>CP — bookings in time window</h3>
+          <p>Queries all confirmed reservations that overlap with the requested time window on the target beam. Subtracts committed capacity from the CAPI snapshot to yield net available capacity for this request.</p>
+          <div class="tag-row"><span class="tag teal">time-aware</span><span class="tag">committed capacity</span></div>
+        </div>
+
+        <div class="detail-component" id="d-mcm-check">
+          <h3>MCM — operational constraints</h3>
+          <p>Applies mission-level restrictions: scheduled maintenance windows, orbital manoeuvre blackouts, and government/military priority reservations that preempt commercial availability regardless of CAPI/CP readings.</p>
+          <div class="tag-row"><span class="tag teal">mission ops</span><span class="tag">blackout windows</span><span class="tag">priority</span></div>
+        </div>
+
+        <div class="detail-component" id="d-cap-gate">
+          <h3>Capacity gate</h3>
+          <p>Compares the net available capacity (CAPI − CP bookings − MCM constraints) against the requested quantity. Full match → APPROVED. Partial match → PARTIAL with a reduced proposal. No match → REJECTED.</p>
+          <div class="tag-row"><span class="tag green">full → APPROVED</span><span class="tag amber">partial → PARTIAL</span><span class="tag red">none → REJECTED</span></div>
+        </div>
+
+        <div class="detail-component" id="d-approved">
+          <h3>APPROVED</h3>
+          <p>Full requested capacity is available. The saga proceeds to commit: CAPI is updated with the reservation, the state machine transitions to COMMITTED, and a <code>capacity.reserved</code> event is published.</p>
+          <div class="tag-row"><span class="tag green">commit to CAPI</span><span class="tag green">capacity.reserved event</span></div>
+        </div>
+
+        <div class="detail-component" id="d-partial">
+          <h3>PARTIAL</h3>
+          <p>Only a portion of the requested capacity is available. The decision engine generates an alternative proposal (reduced quantity, different time slot, or alternative beam) and returns it alongside the PARTIAL status for the client to accept or decline.</p>
+          <div class="tag-row"><span class="tag amber">alt. proposal</span><span class="tag amber">client decision required</span></div>
+        </div>
+
+        <div class="detail-component" id="d-rejected">
+          <h3>REJECTED</h3>
+          <p>No capacity available on the requested beam (or any alternative) within the requested window. The response includes a structured reason code and, where possible, a suggested alternative time window.</p>
+          <div class="tag-row"><span class="tag red">reason code</span><span class="tag red">alt. time suggestion</span></div>
+        </div>
+
+        <div class="detail-component" id="d-event-out">
+          <h3>Event backbone — output</h3>
+          <p>Every outcome publishes a structured event to the bus. Downstream consumers (billing, monitoring, customer notifications) subscribe independently without coupling to this service.</p>
+          <div class="tag-row"><span class="tag amber">request.approved</span><span class="tag amber">request.partial</span><span class="tag amber">request.rejected</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-title">Layer legend</div>
+      <div class="legend-items">
+        <div class="legend-item"><div class="legend-swatch" style="background:#3b6fd4"></div>API / external boundary</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#7f77dd"></div>Orchestration &amp; domain</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#d85a30"></div>State &amp; data</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#ba7517"></div>Event backbone</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#1d9e75"></div>Integration adapters</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#3b6d11"></div>Approved outcome</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#a32d2d"></div>Rejected / error path</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+      clearDetail();
+    });
+  });
+
+  // Detail panel
+  let activeNode = null;
+
+  function showDetail(id, el) {
+    if (activeNode) activeNode.classList.remove('active');
+    activeNode = el;
+    el.classList.add('active');
+
+    document.querySelectorAll('.detail-component').forEach(c => c.classList.remove('visible'));
+    document.getElementById('detail-placeholder').style.display = 'none';
+
+    const comp = document.getElementById('d-' + id);
+    if (comp) {
+      comp.classList.add('visible');
+      document.getElementById('detail-card').classList.add('has-content');
+    }
+  }
+
+  function clearDetail() {
+    if (activeNode) activeNode.classList.remove('active');
+    activeNode = null;
+    document.querySelectorAll('.detail-component').forEach(c => c.classList.remove('visible'));
+    document.getElementById('detail-placeholder').style.display = '';
+    document.getElementById('detail-card').classList.remove('has-content');
+  }
+</script>
+</body>
+</html>
