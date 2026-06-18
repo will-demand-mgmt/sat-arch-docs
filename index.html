@@ -347,7 +347,7 @@
     font-family: var(--font-mono);
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--text-dim);
+    color: var(--text-muted);
     margin-bottom: 20px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
@@ -385,7 +385,7 @@
   }
   .hero-flow-step .step-sub {
     font-size: 10px;
-    color: var(--text-dim);
+    color: var(--text-muted);
     line-height: 1.4;
     display: block;
   }
@@ -525,9 +525,111 @@
     header, nav, main { padding-left: 20px; padding-right: 20px; }
     .detail-panel { position: static; }
   }
+
+  /* ── Login overlay ── */
+  #login-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  #login-overlay.hidden { display: none; }
+  .login-box {
+    width: 100%;
+    max-width: 380px;
+  }
+  .login-wordmark {
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    margin-bottom: 40px;
+  }
+  .login-title {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .login-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+  .login-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    letter-spacing: 0.03em;
+  }
+  .login-input {
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 11px 14px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: var(--font);
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 16px;
+  }
+  .login-input:focus { border-color: var(--accent); }
+  .login-input.error { border-color: #a32d2d; }
+  .login-error {
+    font-size: 12px;
+    color: #e07070;
+    margin-bottom: 14px;
+    display: none;
+  }
+  .login-error.visible { display: block; }
+  .login-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: opacity 0.15s;
+  }
+  .login-btn:hover { opacity: 0.88; }
+  .login-footer {
+    margin-top: 48px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
 </style>
 </head>
 <body>
+
+
+<div id="login-overlay">
+  <div class="login-box">
+    <div class="login-wordmark">Satellite Capacity Orchestration</div>
+    <h2 class="login-title">Welcome back</h2>
+    <p class="login-subtitle">Enter your access password to view the architecture documentation.</p>
+    <label class="login-label" for="login-password">Password</label>
+    <input class="login-input" type="password" id="login-password" placeholder="" autocomplete="current-password"/>
+    <div class="login-error" id="login-error">Incorrect password. Please try again.</div>
+    <button class="login-btn" id="login-btn">Sign in</button>
+    <div class="login-footer">Solution Architecture · Alberto Pavani</div>
+  </div>
+</div>
 
 <header>
   <div class="eyebrow">Architecture Reference</div>
@@ -546,7 +648,7 @@
   <!-- ════════ TAB: HERO ════════ -->
   <div class="tab-panel active" id="panel-hero" style="grid-column: 1 / -1;">
     <div class="hero-panel">
-      <div class="hero-badge">Solution Architecture · Draft v1.0.3</div>
+      <div class="hero-badge">Solution Architecture · Draft v1.1.0</div>
       <h1 class="hero-title">Satellite Capacity<br><span>Orchestration</span> Platform</h1>
       <p class="hero-lead">A unified orchestration layer that coordinates capacity requests across the full satellite ground segment — from customer order to beam reservation — in a single, auditable workflow.</p>
 
@@ -1152,7 +1254,7 @@
     </div>
     <div class="footer-meta">
       <div class="footer-doc-title">Satellite Capacity Orchestration Platform</div>
-      <div class="footer-doc-sub">Solution Architecture · Draft v1.0.3<br>Orchestration · Beam eligibility · Capacity management</div>
+      <div class="footer-doc-sub">Solution Architecture · Draft v1.1.0<br>Orchestration · Beam eligibility · Capacity management</div>
     </div>
   </div>
 </footer>
@@ -1203,6 +1305,38 @@
     const card = document.getElementById('detail-card');
     if (card) card.classList.remove('has-content');
   }
+
+  // ── Login ──
+  (function() {
+    const PWD = 'SatArc2025';
+    const KEY = 'satarch_auth';
+    const overlay = document.getElementById('login-overlay');
+    const input   = document.getElementById('login-password');
+    const btn     = document.getElementById('login-btn');
+    const err     = document.getElementById('login-error');
+
+    if (sessionStorage.getItem(KEY) === '1') {
+      overlay.classList.add('hidden');
+    }
+
+    function attempt() {
+      if (input.value === PWD) {
+        sessionStorage.setItem(KEY, '1');
+        overlay.classList.add('hidden');
+        input.classList.remove('error');
+        err.classList.remove('visible');
+      } else {
+        input.classList.add('error');
+        err.classList.add('visible');
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    btn.addEventListener('click', attempt);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') attempt(); });
+  })();
+
 </script>
 </body>
 </html>
