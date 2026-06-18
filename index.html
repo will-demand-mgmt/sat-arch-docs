@@ -546,7 +546,7 @@
   <!-- ════════ TAB: HERO ════════ -->
   <div class="tab-panel active" id="panel-hero" style="grid-column: 1 / -1;">
     <div class="hero-panel">
-      <div class="hero-badge">Solution Architecture · Draft v1.0.1</div>
+      <div class="hero-badge">Solution Architecture · Draft v1.0.3</div>
       <h1 class="hero-title">Satellite Capacity<br><span>Orchestration</span> Platform</h1>
       <p class="hero-lead">A unified orchestration layer that coordinates capacity requests across the full satellite ground segment — from customer order to beam reservation — in a single, auditable workflow.</p>
 
@@ -954,27 +954,27 @@
           <h3>External clients</h3>
           <p>Customer OSS (Operations Support Systems) and partner systems that consume this API. They submit satellite capacity requests over REST, authenticated via OAuth2 Bearer tokens.</p>
           <p>Typical payload: beam ID, frequency band, polarisation, requested time window, quantity of capacity, and a contract reference.</p>
-          <div class="tag-row"><span class="tag accent" data-tip="Representational State Transfer — standard HTTP-based API protocol">REST</span><span class="tag accent" data-tip="Open Authorization 2.0 — token-based authentication standard">OAuth2</span><span class="tag">OSS</span><span class="tag">partner systems</span></div>
+          <div class="tag-row"><span class="tag accent" data-tip="Representational State Transfer — standard HTTP-based API protocol">REST</span><span class="tag accent" data-tip="Open Authorization 2.0 — token-based authentication standard">OAuth2</span><span class="tag teal" data-tip="Operations Support System — customer's operational management platform">OSS</span><span class="tag purple" data-tip="External systems integrated via API (portals, order managers)">partner systems</span></div>
         </div>
 
         <div class="detail-component" id="d-apigw">
           <h3>API Management</h3>
           <p>The public entry point. Validates OAuth2 tokens, enforces per-client rate limits and throttling policies, and rejects malformed requests before they reach the domain layer.</p>
           <p>Acts as a shield — the orchestration engine only sees well-formed, authenticated requests.</p>
-          <div class="tag-row"><span class="tag accent" data-tip="Authentication (who are you?) and Authorization (what can you do?)">AuthN/AuthZ</span><span class="tag">rate limiting</span><span class="tag">schema validation</span></div>
+          <div class="tag-row"><span class="tag purple" data-tip="Authentication (who are you?) and Authorization (what can you do?)">AuthN/AuthZ</span><span class="tag purple" data-tip="Caps the number of requests per client per time window">rate limiting</span><span class="tag purple" data-tip="Rejects malformed requests before they reach business logic">schema validation</span></div>
         </div>
 
         <div class="detail-component" id="d-saga">
           <h3>Orchestration engine (Saga)</h3>
           <p>Manages the full request lifecycle as a distributed saga. Coordinates the sequence: validate → decide → commit. Each step is idempotent, with explicit retry, timeout, and compensation logic in case a downstream call fails mid-flow.</p>
           <p>If validation succeeds but the commit to CAPI fails, the saga triggers a rollback of any partial reservations already made.</p>
-          <div class="tag-row"><span class="tag purple" data-tip="Distributed transaction pattern using compensating transactions on failure">saga pattern</span><span class="tag">state machine</span><span class="tag">compensation</span><span class="tag">idempotency</span></div>
+          <div class="tag-row"><span class="tag purple" data-tip="Distributed transaction pattern using compensating transactions on failure">saga pattern</span><span class="tag purple" data-tip="Tracks request through defined states: PENDING → VALIDATING → COMMITTED">state machine</span><span class="tag purple" data-tip="Rollback logic that undoes partial work when a step fails mid-flow">compensation</span><span class="tag purple" data-tip="Safe to retry — executing the same step twice produces the same result">idempotency</span></div>
         </div>
 
         <div class="detail-component" id="d-validation">
           <h3>Validation engine</h3>
           <p>Runs three independent checks: contract validity (via GCRM), beam eligibility (via OSS), and capacity availability (via CAPI). All three must pass for the request to proceed to the decision stage.</p>
-          <div class="tag-row"><span class="tag teal" data-tip="Customer Relationship & Contract Management system — source of contract data">GCRM</span><span class="tag teal" data-tip="Operations Support System — customer's operational management platform">OSS</span><span class="tag teal" data-tip="Capacity Inventory API — real-time snapshot of available satellite bandwidth">CAPI</span></div>
+          <div class="tag-row"><span class="tag teal" data-tip="Customer Relationship & Contract Management — source of contract data">GCRM</span><span class="tag teal" data-tip="Operations Support System — customer's operational management platform">OSS</span><span class="tag teal" data-tip="Capacity Inventory API — real-time snapshot of available satellite bandwidth">CAPI</span></div>
         </div>
 
         <div class="detail-component" id="d-decision">
@@ -988,50 +988,50 @@
           <h3>State &amp; Data management</h3>
           <p>Persists all request state transitions in a database acting as a state machine. States: <code>PENDING → VALIDATING → DECIDING → COMMITTED</code>.</p>
           <p>Maintains a contract cache (to avoid repeated GCRM calls) and a capacity snapshot cache (to reduce CAPI load). All transitions are written to an immutable audit log.</p>
-          <div class="tag-row"><span class="tag coral" data-tip="Tracks request through defined states: PENDING → VALIDATING → COMMITTED">state machine</span><span class="tag">cache</span><span class="tag">audit log</span></div>
+          <div class="tag-row"><span class="tag purple" data-tip="Tracks request through defined states: PENDING → VALIDATING → COMMITTED">state machine</span><span class="tag coral" data-tip="In-memory store for contract and capacity data to reduce downstream calls">cache</span><span class="tag coral" data-tip="Immutable, append-only record of every state transition — used for compliance">audit log</span></div>
         </div>
 
         <div class="detail-component" id="d-events">
           <h3>Event backbone</h3>
           <p>Pub/Sub event bus for async communication between internal components and external consumers. Every significant state change produces an event.</p>
           <p>Key events: <code>request.received</code>, <code>request.approved</code>, <code>request.rejected</code>, <code>capacity.reserved</code>.</p>
-          <div class="tag-row"><span class="tag amber" data-tip="Publish/Subscribe — producers emit events without knowing who consumes them">pub/sub</span><span class="tag">async</span><span class="tag">event-driven</span></div>
+          <div class="tag-row"><span class="tag purple" data-tip="Publish/Subscribe — producers emit events without knowing who consumes them">pub/sub</span><span class="tag purple" data-tip="Asynchronous — components communicate via events without waiting for a response">async</span><span class="tag purple" data-tip="Architecture where state changes trigger events consumed by other services">event-driven</span></div>
         </div>
 
         <div class="detail-component" id="d-gcrm">
           <h3>GCRM adapter — Contracts</h3>
           <p>Reads active customer contracts from the CRM system. Validates that the requested beam is within the contracted scope (region, service tier, authorised beams list).</p>
-          <div class="tag-row"><span class="tag teal" data-tip="Verifies the customer contract is active and authorises the requested beam">contract validation</span><span class="tag">retry</span><span class="tag">circuit breaker</span></div>
+          <div class="tag-row"><span class="tag teal" data-tip="Verifies the customer contract is active and authorises the requested beam">contract validation</span><span class="tag teal" data-tip="Automatic re-attempt of failed calls with backoff to handle transient errors">retry</span><span class="tag teal" data-tip="Stops calling a failing downstream system to prevent cascade failures">circuit breaker</span></div>
         </div>
 
         <div class="detail-component" id="d-capi">
           <h3>CAPI adapter — Capacity inventory</h3>
           <p>Queries the capacity inventory system for a real-time snapshot of available bandwidth on a given beam. Returns current free capacity before bookings are applied.</p>
-          <div class="tag-row"><span class="tag teal" data-tip="Current record of all available capacity units per beam">inventory</span><span class="tag">snapshot</span><span class="tag">bandwidth</span></div>
+          <div class="tag-row"><span class="tag teal" data-tip="Current record of all available capacity units per beam">inventory</span><span class="tag teal" data-tip="Point-in-time read of capacity — cached to reduce CAPI polling frequency">snapshot</span><span class="tag teal" data-tip="Total data throughput (MHz or Mbps) allocatable on a beam">bandwidth</span></div>
         </div>
 
         <div class="detail-component" id="d-cp">
           <h3>CP adapter — Capacity planner</h3>
           <p>Queries the capacity planning system to account for existing bookings in the requested time window. Subtracts committed capacity from the CAPI snapshot to produce net available capacity.</p>
-          <div class="tag-row"><span class="tag teal" data-tip="Start/end period requested by the customer for capacity reservation">time window</span><span class="tag">bookings</span><span class="tag">net capacity</span></div>
+          <div class="tag-row"><span class="tag accent" data-tip="Start/end period requested by the customer for capacity reservation">time window</span><span class="tag coral" data-tip="Already-committed capacity reservations that reduce net available capacity">bookings</span><span class="tag teal" data-tip="Available capacity after subtracting existing bookings from CAPI snapshot">net capacity</span></div>
         </div>
 
         <div class="detail-component" id="d-oss">
           <h3>OSS / Frequency Planning adapter</h3>
           <p>Interfaces with the Operations Support System for two checks: geographic footprint verification (is the ground station inside the beam coverage area?) and technical compatibility (frequency, polarisation, service type).</p>
-          <div class="tag-row"><span class="tag teal" data-tip="Geographic area on Earth covered by a satellite beam's signal">footprint</span><span class="tag">frequency plan</span><span class="tag">polarisation</span></div>
+          <div class="tag-row"><span class="tag teal" data-tip="Geographic area on Earth covered by a satellite beam's signal">footprint</span><span class="tag teal" data-tip="Allocation of frequency bands and polarisation per beam — managed in OSS">frequency plan</span><span class="tag teal" data-tip="Orientation of the electromagnetic wave (horizontal, vertical, or circular)">polarisation</span></div>
         </div>
 
         <div class="detail-component" id="d-mcm">
           <h3>MCM adapter — Mission segment</h3>
           <p>Queries the Mission Control &amp; Management system for operational constraints: maintenance windows, orbital manoeuvre schedules, government or military priority reservations that override commercial availability.</p>
-          <div class="tag-row"><span class="tag teal" data-tip="Operational constraints from the satellite mission: maintenance, manoeuvres">mission ops</span><span class="tag">priority windows</span><span class="tag">maintenance</span></div>
+          <div class="tag-row"><span class="tag teal" data-tip="Operational constraints from the satellite mission: maintenance, manoeuvres">mission ops</span><span class="tag coral" data-tip="Time slots reserved for government or military use — override commercial access">priority windows</span><span class="tag coral" data-tip="Scheduled downtime windows during which commercial capacity is unavailable">maintenance</span></div>
         </div>
 
         <div class="detail-component" id="d-downstream">
           <h3>Downstream systems</h3>
           <p>The independent legacy and third-party systems of record. The integration layer above them keeps all coupling contained in adapter code — the domain layer has no direct knowledge of their APIs or data formats.</p>
-          <div class="tag-row"><span class="tag">GCRM</span><span class="tag">CAPI</span><span class="tag">CP</span><span class="tag">OSS</span><span class="tag">MCM</span></div>
+          <div class="tag-row"><span class="tag teal" data-tip="Customer Relationship & Contract Management — source of contract data">GCRM</span><span class="tag teal" data-tip="Capacity Inventory API — real-time snapshot of available satellite bandwidth">CAPI</span><span class="tag teal" data-tip="Capacity Planner — tracks confirmed bookings and net available capacity over time">CP</span><span class="tag teal" data-tip="Operations Support System — customer's operational management platform">OSS</span><span class="tag teal" data-tip="Mission Control & Management — applies operational and priority constraints">MCM</span></div>
         </div>
 
         <!-- Beam flow specifics -->
@@ -1044,19 +1044,19 @@
         <div class="detail-component" id="d-geo-check">
           <h3>Geographic check</h3>
           <p>Verifies that the customer's ground station coordinates fall within the satellite beam's footprint — the geographic area on Earth that the beam can serve. This is a geometric calculation against coverage maps maintained in OSS/Frequency Planning.</p>
-          <div class="tag-row"><span class="tag purple" data-tip="Operations Support System — customer's operational management platform">OSS</span><span class="tag">footprint polygon</span><span class="tag">ground station</span></div>
+          <div class="tag-row"><span class="tag teal" data-tip="Operations Support System — customer's operational management platform">OSS</span><span class="tag teal" data-tip="Geometric shape defining the beam coverage area used for station lookup">footprint polygon</span><span class="tag teal" data-tip="Customer's earth-based antenna site — must be inside the beam footprint">ground station</span></div>
         </div>
 
         <div class="detail-component" id="d-contract-check">
           <h3>Contract check</h3>
           <p>Reads the customer's active contract from GCRM and verifies that the requested beam is explicitly authorised. Contracts may restrict access by region, beam tier, or service type.</p>
-          <div class="tag-row"><span class="tag purple" data-tip="Customer Relationship & Contract Management system — source of contract data">GCRM</span><span class="tag">authorised beams</span><span class="tag">service tier</span></div>
+          <div class="tag-row"><span class="tag teal" data-tip="Customer Relationship & Contract Management — source of contract data">GCRM</span><span class="tag teal" data-tip="List of beams the customer's contract explicitly permits access to">authorised beams</span><span class="tag teal" data-tip="Level of service defined in the contract (e.g. enterprise, standard)">service tier</span></div>
         </div>
 
         <div class="detail-component" id="d-tech-check">
           <h3>Technical check</h3>
           <p>Confirms that the requested frequency, polarisation (horizontal/vertical/circular), and service type are physically compatible with the target beam's specification. A mismatch here means the signal cannot be transmitted or received correctly.</p>
-          <div class="tag-row"><span class="tag purple" data-tip="Operations Support System — customer's operational management platform">OSS</span><span class="tag">frequency plan</span><span class="tag">polarisation</span></div>
+          <div class="tag-row"><span class="tag teal" data-tip="Operations Support System — customer's operational management platform">OSS</span><span class="tag teal" data-tip="Allocation of frequency bands and polarisation per beam — managed in OSS">frequency plan</span><span class="tag teal" data-tip="Orientation of the electromagnetic wave (horizontal, vertical, or circular)">polarisation</span></div>
         </div>
 
         <div class="detail-component" id="d-elig-gate">
@@ -1074,19 +1074,19 @@
         <div class="detail-component" id="d-capi-check">
           <h3>CAPI — instantaneous snapshot</h3>
           <p>Provides a real-time view of total bandwidth currently available on the beam, before any time-windowed bookings are applied. This is the ceiling from which committed capacity is subtracted.</p>
-          <div class="tag-row"><span class="tag teal" data-tip="Current value fetched live from CAPI, not a cached or historical snapshot">real-time</span><span class="tag">bandwidth ceiling</span></div>
+          <div class="tag-row"><span class="tag teal" data-tip="Current value fetched live from CAPI, not a cached or historical snapshot">real-time</span><span class="tag coral" data-tip="Maximum allocatable capacity before any bookings are subtracted">bandwidth ceiling</span></div>
         </div>
 
         <div class="detail-component" id="d-cp-check">
           <h3>CP — bookings in time window</h3>
           <p>Queries all confirmed reservations that overlap with the requested time window on the target beam. Subtracts committed capacity from the CAPI snapshot to yield net available capacity for this request.</p>
-          <div class="tag-row"><span class="tag teal" data-tip="Takes the requested time window into account when computing available capacity">time-aware</span><span class="tag">committed capacity</span></div>
+          <div class="tag-row"><span class="tag teal" data-tip="Takes the requested time window into account when computing available capacity">time-aware</span><span class="tag coral" data-tip="Bandwidth already reserved by confirmed bookings in the same time window">committed capacity</span></div>
         </div>
 
         <div class="detail-component" id="d-mcm-check">
           <h3>MCM — operational constraints</h3>
           <p>Applies mission-level restrictions: scheduled maintenance windows, orbital manoeuvre blackouts, and government/military priority reservations that preempt commercial availability regardless of CAPI/CP readings.</p>
-          <div class="tag-row"><span class="tag teal" data-tip="Operational constraints from the satellite mission: maintenance, manoeuvres">mission ops</span><span class="tag">blackout windows</span><span class="tag">priority</span></div>
+          <div class="tag-row"><span class="tag teal" data-tip="Operational constraints from the satellite mission: maintenance, manoeuvres">mission ops</span><span class="tag coral" data-tip="Periods blocked by MCM for maintenance or priority missions">blackout windows</span><span class="tag coral" data-tip="Mission-level override that preempts commercial capacity regardless of availability">priority</span></div>
         </div>
 
         <div class="detail-component" id="d-cap-gate">
@@ -1110,13 +1110,13 @@
         <div class="detail-component" id="d-rejected">
           <h3>REJECTED</h3>
           <p>No capacity available on the requested beam (or any alternative) within the requested window. The response includes a structured reason code and, where possible, a suggested alternative time window.</p>
-          <div class="tag-row"><span class="tag red" data-tip="Structured code explaining why the request was rejected">reason code</span><span class="tag red" data-tip="Alternative time window proposed when no capacity exists in the requested slot">alt. time suggestion</span></div>
+          <div class="tag-row"><span class="tag amber" data-tip="Structured code explaining why the request was rejected">reason code</span><span class="tag amber" data-tip="Alternative time window proposed when no capacity exists in the requested slot">alt. time suggestion</span></div>
         </div>
 
         <div class="detail-component" id="d-event-out">
           <h3>Event backbone — output</h3>
           <p>Every outcome publishes a structured event to the bus. Downstream consumers (billing, monitoring, customer notifications) subscribe independently without coupling to this service.</p>
-          <div class="tag-row"><span class="tag amber" data-tip="Event: full capacity reserved and committed">request.approved</span><span class="tag amber" data-tip="Event: partial capacity available, alternative proposal attached">request.partial</span><span class="tag amber" data-tip="Event: request rejected with reason code">request.rejected</span></div>
+          <div class="tag-row"><span class="tag green" data-tip="Event: full capacity reserved and committed">request.approved</span><span class="tag amber" data-tip="Event: partial capacity available, alternative proposal attached">request.partial</span><span class="tag red" data-tip="Event: request rejected with reason code">request.rejected</span></div>
         </div>
 
       </div>
@@ -1152,7 +1152,7 @@
     </div>
     <div class="footer-meta">
       <div class="footer-doc-title">Satellite Capacity Orchestration Platform</div>
-      <div class="footer-doc-sub">Solution Architecture · Draft v1.0.1<br>Orchestration · Beam eligibility · Capacity management</div>
+      <div class="footer-doc-sub">Solution Architecture · Draft v1.0.3<br>Orchestration · Beam eligibility · Capacity management</div>
     </div>
   </div>
 </footer>
