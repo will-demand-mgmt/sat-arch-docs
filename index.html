@@ -841,7 +841,7 @@
   <!-- ════════ TAB: HERO ════════ -->
   <div class="tab-panel active" id="panel-hero" style="grid-column: 1 / -1;">
     <div class="hero-panel">
-      <div class="hero-badge">Solution Architecture · Draft v1.2.1</div>
+      <div class="hero-badge">Solution Architecture · Draft v1.3.0</div>
       <h1 class="hero-title">Satellite Capacity<br><span>Orchestration</span> Platform</h1>
       <p class="hero-lead">A unified orchestration layer that coordinates capacity requests across the full satellite ground segment — from customer order to beam reservation — in a single, auditable workflow.</p>
 
@@ -1877,6 +1877,542 @@
         </div>
 
       </div><!-- end flows-grid -->
+
+      <!-- ── Edge Cases divider ── -->
+      <div style="margin: 48px 0 28px; border-top: 1px solid var(--border); padding-top: 28px; display:flex; align-items:center; gap:12px;">
+        <span style="font-size:11px;font-family:var(--font-mono);letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);">Edge Cases</span>
+        <span style="font-size:11px;color:var(--text-dim);">— failure modes, race conditions &amp; operational scenarios</span>
+      </div>
+
+      <div class="flows-grid" id="edge-grid">
+
+        <!-- ── Concurrency Control ── -->
+        <div class="flow-card" id="fc-concurrency" onclick="expandFlow('concurrency')">
+          <div class="flow-card-header">
+            <div class="flow-card-header-left">
+              <span class="flow-badge valfail">Edge Case</span>
+              <span class="flow-card-title">Concurrency Control</span>
+            </div>
+            <span class="flow-expand-hint">click to expand ↗</span>
+          </div>
+          <div class="flow-body">
+            <div class="flow-diagram">
+              <svg viewBox="0 0 560 480" xmlns="http://www.w3.org/2000/svg" font-family="'Inter',sans-serif">
+                <defs>
+                  <marker id="ec1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#4a5570" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                  <marker id="ec1r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#3b6d11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                  <marker id="ec1a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#ba7517" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                </defs>
+                <g font-size="10" fill="#7a8aaa" text-anchor="middle" font-family="monospace">
+                  <text x="35" y="14">ClientA</text><text x="100" y="14">ClientB</text>
+                  <text x="175" y="14">API</text><text x="270" y="14">Orchestrator</text>
+                  <text x="375" y="14">Validation</text><text x="490" y="14">CAPI</text>
+                </g>
+                <line x1="35"  y1="20" x2="35"  y2="480" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="100" y1="20" x2="100" y2="480" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="175" y1="20" x2="175" y2="480" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="270" y1="20" x2="270" y2="480" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="375" y1="20" x2="375" y2="480" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="490" y1="20" x2="490" y2="480" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+
+                <rect x="0" y="28" width="560" height="14" fill="#0f1e38" rx="2"/>
+                <text x="280" y="38" text-anchor="middle" font-size="9" fill="#3b6fd4" font-family="monospace" letter-spacing="0.06em">CONCURRENT REQUESTS</text>
+
+                <line x1="35" y1="56" x2="168" y2="56" stroke="#4a5570" stroke-width="1" marker-end="url(#ec1)"/>
+                <text x="100" y="52" text-anchor="middle" font-size="9" fill="#6a7fa8">POST /requests (A)</text>
+                <line x1="100" y1="70" x2="168" y2="70" stroke="#4a5570" stroke-width="1" marker-end="url(#ec1)"/>
+                <text x="136" y="66" text-anchor="middle" font-size="9" fill="#6a7fa8">POST /requests (B)</text>
+                <line x1="175" y1="84" x2="263" y2="84" stroke="#4a5570" stroke-width="1" marker-end="url(#ec1)"/>
+                <text x="220" y="80" text-anchor="middle" font-size="9" fill="#6a7fa8">Forward A</text>
+                <line x1="175" y1="98" x2="263" y2="98" stroke="#4a5570" stroke-width="1" marker-end="url(#ec1)"/>
+                <text x="220" y="94" text-anchor="middle" font-size="9" fill="#6a7fa8">Forward B</text>
+
+                <!-- Par A -->
+                <rect x="2" y="110" width="556" height="120" fill="rgba(59,111,212,0.04)" rx="3" stroke="rgba(59,111,212,0.15)" stroke-width="0.5"/>
+                <text x="8" y="122" font-size="9" fill="#3b6fd4" font-family="monospace">par Request A</text>
+                <line x1="270" y1="132" x2="368" y2="132" stroke="#4a5570" stroke-width="1" marker-end="url(#ec1)"/>
+                <text x="320" y="128" text-anchor="middle" font-size="9" fill="#6a7fa8">Validate A</text>
+                <line x1="375" y1="146" x2="483" y2="146" stroke="#4a5570" stroke-width="1" marker-end="url(#ec1)"/>
+                <text x="430" y="142" text-anchor="middle" font-size="9" fill="#6a7fa8">Check availability</text>
+                <line x1="483" y1="160" x2="382" y2="160" stroke="#ec1r" stroke-width="1" marker-end="url(#ec1r)"/>
+                <text x="430" y="156" text-anchor="middle" font-size="9" fill="#5a8a40">100 MHz available</text>
+                <line x1="375" y1="174" x2="483" y2="174" stroke="#4a5570" stroke-width="1" marker-end="url(#ec1)"/>
+                <text x="430" y="170" text-anchor="middle" font-size="9" fill="#6a7fa8">Soft-reserve 40 MHz (TTL)</text>
+                <line x1="483" y1="188" x2="382" y2="188" stroke="#ec1r" stroke-width="1" marker-end="url(#ec1r)"/>
+                <text x="430" y="184" text-anchor="middle" font-size="9" fill="#5a8a40">Reserved OK → APPROVED</text>
+
+                <!-- Par B -->
+                <rect x="2" y="238" width="556" height="100" fill="rgba(186,117,23,0.04)" rx="3" stroke="rgba(186,117,23,0.15)" stroke-width="0.5"/>
+                <text x="8" y="250" font-size="9" fill="#ba7517" font-family="monospace">par Request B</text>
+                <line x1="270" y1="260" x2="368" y2="260" stroke="#4a5570" stroke-width="1" marker-end="url(#ec1)"/>
+                <text x="320" y="256" text-anchor="middle" font-size="9" fill="#6a7fa8">Validate B</text>
+                <line x1="375" y1="274" x2="483" y2="274" stroke="#4a5570" stroke-width="1" marker-end="url(#ec1)"/>
+                <text x="430" y="270" text-anchor="middle" font-size="9" fill="#6a7fa8">Check availability</text>
+                <line x1="483" y1="288" x2="382" y2="288" stroke="#ec1a" stroke-width="1" marker-end="url(#ec1a)"/>
+                <text x="430" y="284" text-anchor="middle" font-size="9" fill="#a06010">60 MHz (after A soft-reserve)</text>
+                <line x1="368" y1="308" x2="277" y2="308" stroke="#ec1a" stroke-width="1" marker-end="url(#ec1a)"/>
+                <text x="320" y="304" text-anchor="middle" font-size="9" fill="#a06010">PARTIAL or APPROVED / REJECTED</text>
+
+                <line x1="270" y1="348" x2="182" y2="348" stroke="#3b6d11" stroke-width="1" marker-end="url(#ec1r)"/>
+                <text x="226" y="344" text-anchor="middle" font-size="9" fill="#5a8a40">Response A</text>
+                <line x1="270" y1="364" x2="182" y2="364" stroke="#ba7517" stroke-width="1" marker-end="url(#ec1a)"/>
+                <text x="226" y="360" text-anchor="middle" font-size="9" fill="#a06010">Response B</text>
+              </svg>
+            </div>
+            <div class="flow-notes">
+              <div class="flow-note">
+                <div class="flow-note-phase">Soft reservation with TTL</div>
+                <div class="flow-note-text">When request A is validated and approved, CAPI applies a <em>soft reservation</em> with a TTL (e.g. 5 min). This is not a committed reservation — it becomes hard only after the client's explicit accept and execution commit.</div>
+              </div>
+              <div class="flow-note">
+                <div class="flow-note-phase">Concurrent visibility</div>
+                <div class="flow-note-text">Request B sees reduced availability (60 MHz) because A's soft reservation is immediately visible in CAPI. This prevents double-booking without requiring distributed locks.</div>
+              </div>
+              <div class="flow-note">
+                <div class="flow-note-phase">TTL expiry</div>
+                <div class="flow-note-text">If client A does not accept within the TTL window, the soft reservation is released automatically — see the Expired Request edge case. Capacity returns to the pool and becomes visible to future requests.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Accept Delay with Revalidation ── -->
+        <div class="flow-card" id="fc-delay" onclick="expandFlow('delay')">
+          <div class="flow-card-header">
+            <div class="flow-card-header-left">
+              <span class="flow-badge valfail">Edge Case</span>
+              <span class="flow-card-title">Accept Delay &amp; Revalidation</span>
+            </div>
+            <span class="flow-expand-hint">click to expand ↗</span>
+          </div>
+          <div class="flow-body">
+            <div class="flow-diagram">
+              <svg viewBox="0 0 440 460" xmlns="http://www.w3.org/2000/svg" font-family="'Inter',sans-serif">
+                <defs>
+                  <marker id="ed2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#4a5570" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                  <marker id="ed2r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#3b6d11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                  <marker id="ed2e" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#a32d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                </defs>
+                <g font-size="10" fill="#7a8aaa" text-anchor="middle" font-family="monospace">
+                  <text x="40" y="14">Client</text><text x="130" y="14">API</text>
+                  <text x="240" y="14">Orchestrator</text><text x="360" y="14">Validation</text><text x="430" y="14">CAPI</text>
+                </g>
+                <line x1="40"  y1="20" x2="40"  y2="460" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="130" y1="20" x2="130" y2="460" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="240" y1="20" x2="240" y2="460" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="360" y1="20" x2="360" y2="460" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="430" y1="20" x2="430" y2="460" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+
+                <line x1="40" y1="36" x2="123" y2="36" stroke="#4a5570" stroke-width="1" marker-end="url(#ed2)"/>
+                <text x="82" y="32" text-anchor="middle" font-size="9" fill="#6a7fa8">POST /requests</text>
+                <line x1="130" y1="50" x2="233" y2="50" stroke="#4a5570" stroke-width="1" marker-end="url(#ed2)"/>
+                <text x="182" y="46" text-anchor="middle" font-size="9" fill="#6a7fa8">Validate</text>
+                <line x1="240" y1="64" x2="353" y2="64" stroke="#4a5570" stroke-width="1" marker-end="url(#ed2)"/>
+                <text x="298" y="60" text-anchor="middle" font-size="9" fill="#6a7fa8">Check availability</text>
+                <line x1="360" y1="78" x2="423" y2="78" stroke="#4a5570" stroke-width="1" marker-end="url(#ed2)"/>
+                <text x="393" y="74" text-anchor="middle" font-size="9" fill="#6a7fa8">Query CAPI</text>
+                <line x1="423" y1="92" x2="367" y2="92" stroke="#ed2r" stroke-width="1" marker-end="url(#ed2r)"/>
+                <text x="393" y="88" text-anchor="middle" font-size="9" fill="#5a8a40">100 MHz — soft-reserve</text>
+                <line x1="353" y1="106" x2="247" y2="106" stroke="#ed2r" stroke-width="1" marker-end="url(#ed2r)"/>
+                <text x="298" y="102" text-anchor="middle" font-size="9" fill="#5a8a40">APPROVED</text>
+                <line x1="240" y1="120" x2="137" y2="120" stroke="#ed2r" stroke-width="1" marker-end="url(#ed2r)"/>
+                <text x="188" y="116" text-anchor="middle" font-size="9" fill="#5a8a40">APPROVED</text>
+                <line x1="130" y1="134" x2="47" y2="134" stroke="#ed2r" stroke-width="1" marker-end="url(#ed2r)"/>
+                <text x="88" y="130" text-anchor="middle" font-size="9" fill="#5a8a40">APPROVED</text>
+
+                <!-- Delay -->
+                <rect x="0" y="148" width="440" height="26" fill="#1a1400" rx="2" stroke="rgba(186,117,23,0.2)" stroke-width="0.5"/>
+                <text x="220" y="165" text-anchor="middle" font-size="9" fill="#ba7517" font-family="monospace">DELAY — client waits · soft reservation held until TTL · capacity may change</text>
+
+                <line x1="40" y1="190" x2="123" y2="190" stroke="#4a5570" stroke-width="1" marker-end="url(#ed2)"/>
+                <text x="82" y="186" text-anchor="middle" font-size="9" fill="#6a7fa8">POST /accept</text>
+                <line x1="130" y1="204" x2="233" y2="204" stroke="#4a5570" stroke-width="1" marker-end="url(#ed2)"/>
+                <text x="182" y="200" text-anchor="middle" font-size="9" fill="#6a7fa8">Trigger execution</text>
+
+                <rect x="0" y="218" width="440" height="14" fill="#0f1e38" rx="2"/>
+                <text x="220" y="228" text-anchor="middle" font-size="9" fill="#3b6fd4" font-family="monospace" letter-spacing="0.06em">REVALIDATION</text>
+
+                <line x1="240" y1="242" x2="353" y2="242" stroke="#4a5570" stroke-width="1" marker-end="url(#ed2)"/>
+                <text x="298" y="238" text-anchor="middle" font-size="9" fill="#6a7fa8">Re-check availability</text>
+                <line x1="360" y1="256" x2="423" y2="256" stroke="#4a5570" stroke-width="1" marker-end="url(#ed2)"/>
+                <text x="393" y="252" text-anchor="middle" font-size="9" fill="#6a7fa8">Query CAPI</text>
+                <line x1="423" y1="270" x2="367" y2="270" stroke="#ed2e" stroke-width="1" marker-end="url(#ed2e)"/>
+                <text x="393" y="266" text-anchor="middle" font-size="9" fill="#c05050">Only 50 MHz left</text>
+
+                <!-- Alt -->
+                <rect x="2" y="284" width="218" height="70" fill="rgba(59,109,17,0.06)" rx="3" stroke="rgba(59,109,17,0.2)" stroke-width="0.5"/>
+                <text x="8" y="296" font-size="9" fill="#5a8a40" font-family="monospace">alt [still valid]</text>
+                <path d="M240 308 Q215 316 240 324" fill="none" stroke="#3b6d11" stroke-width="1" marker-end="url(#ed2r)"/>
+                <text x="193" y="319" font-size="9" fill="#5a8a40">Continue execution</text>
+
+                <rect x="224" y="284" width="214" height="70" fill="rgba(163,45,45,0.06)" rx="3" stroke="rgba(163,45,45,0.2)" stroke-width="0.5"/>
+                <text x="230" y="296" font-size="9" fill="#a05050" font-family="monospace">else [invalidated]</text>
+                <path d="M240 308 Q265 316 240 324" fill="none" stroke="#a32d2d" stroke-width="1" marker-end="url(#ed2e)"/>
+                <text x="286" y="319" font-size="9" fill="#c05050">INVALIDATED / new PARTIAL</text>
+                <line x1="240" y1="340" x2="137" y2="340" stroke="#a32d2d" stroke-width="1" marker-end="url(#ed2e)"/>
+                <text x="188" y="336" text-anchor="middle" font-size="9" fill="#c05050">Rejected / new proposal</text>
+                <line x1="130" y1="356" x2="47" y2="356" stroke="#a32d2d" stroke-width="1" marker-end="url(#ed2e)"/>
+                <text x="88" y="352" text-anchor="middle" font-size="9" fill="#c05050">INVALIDATED</text>
+              </svg>
+            </div>
+            <div class="flow-notes">
+              <div class="flow-note">
+                <div class="flow-note-phase">Soft reservation during delay</div>
+                <div class="flow-note-text">After APPROVED, a soft reservation is held in CAPI until the TTL expires. If the client accepts within the TTL, the reservation is still active. If TTL expires before accept, the request transitions to EXPIRED — see the Expired Request edge case.</div>
+              </div>
+              <div class="flow-note">
+                <div class="flow-note-phase">Revalidation on accept</div>
+                <div class="flow-note-text">The Orchestrator always re-checks capacity before triggering execution. If capacity has changed (other requests committed in the interim), the result may differ from the original approval.</div>
+              </div>
+              <div class="flow-note">
+                <div class="flow-note-phase">Invalidation outcomes</div>
+                <div class="flow-note-text">If revalidation fails: the request is marked INVALIDATED and the client receives either a rejection with reason or a new PARTIAL proposal if reduced capacity is still available.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Timeout Handling ── -->
+        <div class="flow-card" id="fc-timeout" onclick="expandFlow('timeout')">
+          <div class="flow-card-header">
+            <div class="flow-card-header-left">
+              <span class="flow-badge valfail">Edge Case</span>
+              <span class="flow-card-title">Timeout &amp; Retry with SLA Budget</span>
+            </div>
+            <span class="flow-expand-hint">click to expand ↗</span>
+          </div>
+          <div class="flow-body">
+            <div class="flow-diagram">
+              <svg viewBox="0 0 400 440" xmlns="http://www.w3.org/2000/svg" font-family="'Inter',sans-serif">
+                <defs>
+                  <marker id="et3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#4a5570" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                  <marker id="et3r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#3b6d11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                  <marker id="et3e" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#a32d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                </defs>
+                <g font-size="10" fill="#7a8aaa" text-anchor="middle" font-family="monospace">
+                  <text x="40" y="14">Client</text><text x="120" y="14">API</text>
+                  <text x="230" y="14">Orchestrator</text><text x="360" y="14">CP</text>
+                </g>
+                <line x1="40"  y1="20" x2="40"  y2="440" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="120" y1="20" x2="120" y2="440" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="230" y1="20" x2="230" y2="440" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="360" y1="20" x2="360" y2="440" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+
+                <line x1="40" y1="36" x2="113" y2="36" stroke="#4a5570" stroke-width="1" marker-end="url(#et3)"/>
+                <text x="78" y="32" text-anchor="middle" font-size="9" fill="#6a7fa8">POST /accept</text>
+                <line x1="120" y1="50" x2="223" y2="50" stroke="#4a5570" stroke-width="1" marker-end="url(#et3)"/>
+                <text x="172" y="46" text-anchor="middle" font-size="9" fill="#6a7fa8">Start execution</text>
+                <path d="M230 64 Q205 72 230 80" fill="none" stroke="#4a5570" stroke-width="1" marker-end="url(#et3)"/>
+                <text x="183" y="75" font-size="9" fill="#6a7fa8">Start SLA timer (15 min)</text>
+
+                <!-- Retry loop -->
+                <rect x="2" y="92" width="396" height="160" fill="rgba(59,111,212,0.04)" rx="3" stroke="rgba(59,111,212,0.15)" stroke-width="0.5"/>
+                <text x="8" y="104" font-size="9" fill="#3b6fd4" font-family="monospace">loop retry (max 3) — exponential backoff: 2s · 4s · 8s</text>
+
+                <line x1="230" y1="116" x2="353" y2="116" stroke="#4a5570" stroke-width="1" marker-end="url(#et3)"/>
+                <text x="292" y="112" text-anchor="middle" font-size="9" fill="#6a7fa8">Update frequency plan</text>
+
+                <rect x="160" y="128" width="196" height="50" fill="rgba(59,109,17,0.06)" rx="3" stroke="rgba(59,109,17,0.15)" stroke-width="0.5"/>
+                <text x="166" y="140" font-size="9" fill="#5a8a40" font-family="monospace">alt [success]</text>
+                <line x1="353" y1="152" x2="237" y2="152" stroke="#3b6d11" stroke-width="1" marker-end="url(#et3r)"/>
+                <text x="292" y="148" text-anchor="middle" font-size="9" fill="#5a8a40">OK → break</text>
+
+                <rect x="2" y="186" width="354" height="58" fill="rgba(163,45,45,0.04)" rx="3" stroke="rgba(163,45,45,0.15)" stroke-width="0.5"/>
+                <text x="8" y="198" font-size="9" fill="#a05050" font-family="monospace">else [timeout]</text>
+                <text x="190" y="216" text-anchor="middle" font-size="9" fill="#786020">wait backoff interval → retry</text>
+                <text x="190" y="232" text-anchor="middle" font-size="9" fill="#5a5570">SLA budget checked before each retry</text>
+
+                <!-- All retries failed -->
+                <rect x="2" y="260" width="196" height="80" fill="rgba(163,45,45,0.06)" rx="3" stroke="rgba(163,45,45,0.2)" stroke-width="0.5"/>
+                <text x="8" y="272" font-size="9" fill="#a05050" font-family="monospace">alt [all retries failed]</text>
+                <path d="M230 284 Q205 292 230 300" fill="none" stroke="#a32d2d" stroke-width="1" marker-end="url(#et3e)"/>
+                <text x="184" y="295" font-size="9" fill="#c05050">SLA risk → rollback</text>
+                <line x1="230" y1="314" x2="127" y2="314" stroke="#a32d2d" stroke-width="1" marker-end="url(#et3e)"/>
+                <text x="178" y="310" text-anchor="middle" font-size="9" fill="#c05050">FAILED</text>
+
+                <rect x="202" y="260" width="196" height="80" fill="rgba(59,109,17,0.06)" rx="3" stroke="rgba(59,109,17,0.2)" stroke-width="0.5"/>
+                <text x="208" y="272" font-size="9" fill="#5a8a40" font-family="monospace">else [success]</text>
+                <path d="M230 290 Q255 298 230 306" fill="none" stroke="#3b6d11" stroke-width="1" marker-end="url(#et3r)"/>
+                <text x="276" y="301" font-size="9" fill="#5a8a40">Continue flow</text>
+
+                <line x1="120" y1="358" x2="47" y2="358" stroke="#a32d2d" stroke-width="1" marker-end="url(#et3e)"/>
+                <text x="82" y="354" text-anchor="middle" font-size="9" fill="#c05050">FAILED notification</text>
+              </svg>
+            </div>
+            <div class="flow-notes">
+              <div class="flow-note">
+                <div class="flow-note-phase">SLA budget</div>
+                <div class="flow-note-text">A global SLA timer (e.g. 15 min) is started at execution begin. This budget is shared across all retry attempts — not reset per retry. If the budget is exhausted before success, rollback is triggered regardless of remaining retries.</div>
+              </div>
+              <div class="flow-note">
+                <div class="flow-note-phase">Exponential backoff</div>
+                <div class="flow-note-text">Retries use exponential backoff: 2s → 4s → 8s between attempts (max 3). This avoids overwhelming a struggling downstream system with rapid successive calls.</div>
+              </div>
+              <div class="flow-note">
+                <div class="flow-note-phase">Failure outcome</div>
+                <div class="flow-note-text">If all retries are exhausted, the saga triggers a rollback of any steps already completed. The client receives a FAILED notification. The event <code>request.failed</code> is published to the backbone.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Rollback Failure ── -->
+        <div class="flow-card" id="fc-rollbackfail" onclick="expandFlow('rollbackfail')">
+          <div class="flow-card-header">
+            <div class="flow-card-header-left">
+              <span class="flow-badge valfail">Edge Case</span>
+              <span class="flow-card-title">Rollback Failure — Critical State</span>
+            </div>
+            <span class="flow-expand-hint">click to expand ↗</span>
+          </div>
+          <div class="flow-body">
+            <div class="flow-diagram">
+              <svg viewBox="0 0 420 480" xmlns="http://www.w3.org/2000/svg" font-family="'Inter',sans-serif">
+                <defs>
+                  <marker id="er4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#4a5570" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                  <marker id="er4k" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#3b6d11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                  <marker id="er4e" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#a32d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                  <marker id="er4c" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#ba7517" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                </defs>
+                <g font-size="10" fill="#7a8aaa" text-anchor="middle" font-family="monospace">
+                  <text x="35" y="14">Client</text><text x="105" y="14">API</text>
+                  <text x="210" y="14">Orchestrator</text>
+                  <text x="300" y="14">CP</text><text x="360" y="14">OSS</text><text x="415" y="14">MCM</text>
+                </g>
+                <line x1="35"  y1="20" x2="35"  y2="480" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="105" y1="20" x2="105" y2="480" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="210" y1="20" x2="210" y2="480" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="300" y1="20" x2="300" y2="480" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="360" y1="20" x2="360" y2="480" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="415" y1="20" x2="415" y2="480" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+
+                <line x1="35" y1="36" x2="98" y2="36" stroke="#4a5570" stroke-width="1" marker-end="url(#er4)"/>
+                <text x="68" y="32" text-anchor="middle" font-size="9" fill="#6a7fa8">POST /accept</text>
+                <line x1="105" y1="50" x2="203" y2="50" stroke="#4a5570" stroke-width="1" marker-end="url(#er4)"/>
+                <text x="154" y="46" text-anchor="middle" font-size="9" fill="#6a7fa8">Execute</text>
+                <line x1="210" y1="64" x2="293" y2="64" stroke="#4a5570" stroke-width="1" marker-end="url(#er4)"/>
+                <text x="252" y="60" text-anchor="middle" font-size="9" fill="#6a7fa8">Update CP</text>
+                <line x1="293" y1="78" x2="217" y2="78" stroke="#3b6d11" stroke-width="1" marker-end="url(#er4k)"/>
+                <text x="252" y="74" text-anchor="middle" font-size="9" fill="#5a8a40">OK</text>
+                <line x1="210" y1="92" x2="353" y2="92" stroke="#4a5570" stroke-width="1" marker-end="url(#er4)"/>
+                <text x="282" y="88" text-anchor="middle" font-size="9" fill="#6a7fa8">Update OSS</text>
+                <line x1="353" y1="106" x2="217" y2="106" stroke="#3b6d11" stroke-width="1" marker-end="url(#er4k)"/>
+                <text x="282" y="102" text-anchor="middle" font-size="9" fill="#5a8a40">OK</text>
+                <line x1="210" y1="120" x2="408" y2="120" stroke="#4a5570" stroke-width="1" marker-end="url(#er4)"/>
+                <text x="312" y="116" text-anchor="middle" font-size="9" fill="#6a7fa8">Apply MCM config</text>
+                <line x1="408" y1="134" x2="217" y2="134" stroke="#a32d2d" stroke-width="1" marker-end="url(#er4e)"/>
+                <text x="312" y="130" text-anchor="middle" font-size="9" fill="#c05050">ERROR</text>
+
+                <rect x="0" y="148" width="420" height="14" fill="#200a0a" rx="2"/>
+                <text x="210" y="158" text-anchor="middle" font-size="9" fill="#e07070" font-family="monospace" letter-spacing="0.06em">ROLLBACK ATTEMPT</text>
+
+                <line x1="210" y1="172" x2="353" y2="172" stroke="#ba7517" stroke-width="1" marker-end="url(#er4c)"/>
+                <text x="282" y="168" text-anchor="middle" font-size="9" fill="#a06010">Revert OSS</text>
+                <line x1="353" y1="186" x2="217" y2="186" stroke="#3b6d11" stroke-width="1" marker-end="url(#er4k)"/>
+                <text x="282" y="182" text-anchor="middle" font-size="9" fill="#5a8a40">OK</text>
+                <line x1="210" y1="200" x2="293" y2="200" stroke="#ba7517" stroke-width="1" marker-end="url(#er4c)"/>
+                <text x="252" y="196" text-anchor="middle" font-size="9" fill="#a06010">Revert CP</text>
+                <line x1="293" y1="214" x2="217" y2="214" stroke="#3b6d11" stroke-width="1" marker-end="url(#er4k)"/>
+                <text x="252" y="210" text-anchor="middle" font-size="9" fill="#5a8a40">OK</text>
+                <line x1="210" y1="228" x2="408" y2="228" stroke="#ba7517" stroke-width="1" marker-end="url(#er4c)"/>
+                <text x="312" y="224" text-anchor="middle" font-size="9" fill="#a06010">Revert MCM</text>
+                <line x1="408" y1="242" x2="217" y2="242" stroke="#a32d2d" stroke-width="1" marker-end="url(#er4e)"/>
+                <text x="312" y="238" text-anchor="middle" font-size="9" fill="#c05050">ERROR — rollback failed</text>
+
+                <rect x="0" y="256" width="420" height="14" fill="#200a0a" rx="2"/>
+                <text x="210" y="266" text-anchor="middle" font-size="9" fill="#ff9090" font-family="monospace" letter-spacing="0.06em">CRITICAL STATE</text>
+
+                <path d="M210 280 Q185 288 210 296" fill="none" stroke="#a32d2d" stroke-width="1" marker-end="url(#er4e)"/>
+                <text x="163" y="291" font-size="9" fill="#c05050">Status = ROLLBACK_FAILED</text>
+                <path d="M210 308 Q185 316 210 324" fill="none" stroke="#a32d2d" stroke-width="1" marker-end="url(#er4e)"/>
+                <text x="163" y="319" font-size="9" fill="#c05050">→ system.critical_alert</text>
+                <line x1="210" y1="336" x2="112" y2="336" stroke="#a32d2d" stroke-width="1" marker-end="url(#er4e)"/>
+                <text x="160" y="332" text-anchor="middle" font-size="9" fill="#c05050">CRITICAL ALERT</text>
+                <line x1="105" y1="350" x2="42" y2="350" stroke="#a32d2d" stroke-width="1" marker-end="url(#er4e)"/>
+                <text x="72" y="346" text-anchor="middle" font-size="9" fill="#c05050">Failure</text>
+
+                <rect x="120" y="366" width="280" height="28" fill="rgba(163,45,45,0.08)" rx="3" stroke="rgba(163,45,45,0.3)" stroke-width="0.5"/>
+                <text x="260" y="383" text-anchor="middle" font-size="9" fill="#e07070">⚠ Manual intervention required — CP/OSS/MCM reconciliation</text>
+              </svg>
+            </div>
+            <div class="flow-notes">
+              <div class="flow-note">
+                <div class="flow-note-phase">Rollback failure</div>
+                <div class="flow-note-text">MCM fails both on execution and on compensation. OSS and CP have been successfully reverted, but MCM remains in an inconsistent state — its config was never applied but the revert also failed.</div>
+              </div>
+              <div class="flow-note">
+                <div class="flow-note-phase">Critical alert</div>
+                <div class="flow-note-text">Status = <code>ROLLBACK_FAILED</code>. A <code>system.critical_alert</code> event is published to the backbone. This triggers immediate notification to on-call operators — the system cannot self-recover from this state.</div>
+              </div>
+              <div class="flow-note">
+                <div class="flow-note-phase">Manual reconciliation</div>
+                <div class="flow-note-text">The CP and OSS teams must verify their systems are consistent. The MCM team must manually inspect and revert or confirm the config state. A post-incident review should produce a runbook for this failure mode.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Idempotency ── -->
+        <div class="flow-card" id="fc-idempotency" onclick="expandFlow('idempotency')">
+          <div class="flow-card-header">
+            <div class="flow-card-header-left">
+              <span class="flow-badge valfail">Edge Case</span>
+              <span class="flow-card-title">Idempotency Handling</span>
+            </div>
+            <span class="flow-expand-hint">click to expand ↗</span>
+          </div>
+          <div class="flow-body">
+            <div class="flow-diagram">
+              <svg viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg" font-family="'Inter',sans-serif">
+                <defs>
+                  <marker id="ei5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#4a5570" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                  <marker id="ei5r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#3b6d11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                  <marker id="ei5a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#ba7517" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                </defs>
+                <g font-size="10" fill="#7a8aaa" text-anchor="middle" font-family="monospace">
+                  <text x="40" y="14">Client</text><text x="130" y="14">API</text>
+                  <text x="240" y="14">Idempotency Store</text><text x="360" y="14">Orchestrator</text>
+                </g>
+                <line x1="40"  y1="20" x2="40"  y2="360" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="130" y1="20" x2="130" y2="360" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="240" y1="20" x2="240" y2="360" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="360" y1="20" x2="360" y2="360" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+
+                <line x1="40" y1="36" x2="123" y2="36" stroke="#4a5570" stroke-width="1" marker-end="url(#ei5)"/>
+                <text x="82" y="32" text-anchor="middle" font-size="9" fill="#6a7fa8">POST /requests (key=abc123)</text>
+                <line x1="130" y1="50" x2="233" y2="50" stroke="#4a5570" stroke-width="1" marker-end="url(#ei5)"/>
+                <text x="182" y="46" text-anchor="middle" font-size="9" fill="#6a7fa8">Check key abc123</text>
+
+                <!-- First request -->
+                <rect x="2" y="62" width="196" height="120" fill="rgba(59,109,17,0.06)" rx="3" stroke="rgba(59,109,17,0.2)" stroke-width="0.5"/>
+                <text x="8" y="74" font-size="9" fill="#5a8a40" font-family="monospace">alt [first request]</text>
+                <line x1="233" y1="88" x2="137" y2="88" stroke="#4a5570" stroke-width="1" marker-end="url(#ei5)"/>
+                <text x="182" y="84" text-anchor="middle" font-size="9" fill="#6a7fa8">Not found</text>
+                <line x1="130" y1="102" x2="233" y2="102" stroke="#4a5570" stroke-width="1" marker-end="url(#ei5)"/>
+                <text x="182" y="98" text-anchor="middle" font-size="9" fill="#6a7fa8">Store key (TTL: 24h)</text>
+                <line x1="130" y1="116" x2="353" y2="116" stroke="#4a5570" stroke-width="1" marker-end="url(#ei5)"/>
+                <text x="242" y="112" text-anchor="middle" font-size="9" fill="#6a7fa8">Process request</text>
+                <line x1="353" y1="130" x2="137" y2="130" stroke="#3b6d11" stroke-width="1" marker-end="url(#ei5r)"/>
+                <text x="242" y="126" text-anchor="middle" font-size="9" fill="#5a8a40">Response → cached in store</text>
+                <line x1="130" y1="144" x2="47" y2="144" stroke="#3b6d11" stroke-width="1" marker-end="url(#ei5r)"/>
+                <text x="88" y="140" text-anchor="middle" font-size="9" fill="#5a8a40">Response</text>
+
+                <!-- Duplicate request -->
+                <rect x="202" y="62" width="196" height="120" fill="rgba(186,117,23,0.06)" rx="3" stroke="rgba(186,117,23,0.2)" stroke-width="0.5"/>
+                <text x="208" y="74" font-size="9" fill="#ba7517" font-family="monospace">else [duplicate key]</text>
+                <line x1="233" y1="96" x2="137" y2="96" stroke="#ba7517" stroke-width="1" marker-end="url(#ei5a)"/>
+                <text x="185" y="92" text-anchor="middle" font-size="9" fill="#a06010">Found (not expired)</text>
+                <line x1="130" y1="130" x2="47" y2="130" stroke="#ba7517" stroke-width="1" marker-end="url(#ei5a)"/>
+                <text x="88" y="126" text-anchor="middle" font-size="9" fill="#a06010">Cached response (no re-process)</text>
+
+                <!-- TTL expiry note -->
+                <rect x="2" y="196" width="396" height="28" fill="rgba(127,119,221,0.06)" rx="3" stroke="rgba(127,119,221,0.2)" stroke-width="0.5"/>
+                <text x="200" y="214" text-anchor="middle" font-size="9" fill="#9990e8">Key TTL: 24h — after expiry, same key treated as a new request</text>
+
+                <!-- Second duplicate -->
+                <line x1="40" y1="244" x2="123" y2="244" stroke="#4a5570" stroke-width="1" marker-end="url(#ei5)"/>
+                <text x="82" y="240" text-anchor="middle" font-size="9" fill="#6a7fa8">POST /requests (key=abc123) retry</text>
+                <line x1="130" y1="258" x2="233" y2="258" stroke="#4a5570" stroke-width="1" marker-end="url(#ei5)"/>
+                <text x="182" y="254" text-anchor="middle" font-size="9" fill="#6a7fa8">Check key abc123</text>
+                <line x1="233" y1="272" x2="137" y2="272" stroke="#ba7517" stroke-width="1" marker-end="url(#ei5a)"/>
+                <text x="182" y="268" text-anchor="middle" font-size="9" fill="#a06010">Found → return cached</text>
+                <line x1="130" y1="286" x2="47" y2="286" stroke="#ba7517" stroke-width="1" marker-end="url(#ei5a)"/>
+                <text x="88" y="282" text-anchor="middle" font-size="9" fill="#a06010">Same response (idempotent)</text>
+              </svg>
+            </div>
+            <div class="flow-notes">
+              <div class="flow-note">
+                <div class="flow-note-phase">Idempotency key</div>
+                <div class="flow-note-text">Each request carries a client-generated idempotency key (e.g. UUID). The API layer checks the key against the Idempotency Store before forwarding to the Orchestrator.</div>
+              </div>
+              <div class="flow-note">
+                <div class="flow-note-phase">Duplicate handling</div>
+                <div class="flow-note-text">If the key is found and not expired, the cached response is returned immediately — the request is never forwarded to the Orchestrator. This is safe for retries caused by network timeouts or client-side failures.</div>
+              </div>
+              <div class="flow-note">
+                <div class="flow-note-phase">Key TTL: 24h</div>
+                <div class="flow-note-text">The key expires after 24 hours. After expiry, the same key is treated as a brand-new request. This prevents the store from growing unbounded while covering all realistic retry windows.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Expired Request ── -->
+        <div class="flow-card" id="fc-expired" onclick="expandFlow('expired')">
+          <div class="flow-card-header">
+            <div class="flow-card-header-left">
+              <span class="flow-badge valfail">Edge Case</span>
+              <span class="flow-card-title">Expired Request Handling</span>
+            </div>
+            <span class="flow-expand-hint">click to expand ↗</span>
+          </div>
+          <div class="flow-body">
+            <div class="flow-diagram">
+              <svg viewBox="0 0 380 340" xmlns="http://www.w3.org/2000/svg" font-family="'Inter',sans-serif">
+                <defs>
+                  <marker id="ex6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#4a5570" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                  <marker id="ex6r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#3b6d11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                  <marker id="ex6e" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#a32d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                </defs>
+                <g font-size="10" fill="#7a8aaa" text-anchor="middle" font-family="monospace">
+                  <text x="60" y="14">Scheduler</text><text x="180" y="14">Orchestrator</text>
+                  <text x="290" y="14">DB</text><text x="360" y="14">CAPI</text>
+                </g>
+                <line x1="60"  y1="20" x2="60"  y2="340" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="180" y1="20" x2="180" y2="340" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="290" y1="20" x2="290" y2="340" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+                <line x1="360" y1="20" x2="360" y2="340" stroke="#1e2a40" stroke-width="1" stroke-dasharray="4 3"/>
+
+                <line x1="180" y1="36" x2="283" y2="36" stroke="#4a5570" stroke-width="1" marker-end="url(#ex6)"/>
+                <text x="232" y="32" text-anchor="middle" font-size="9" fill="#6a7fa8">Store request (APPROVED)</text>
+
+                <rect x="0" y="50" width="380" height="20" fill="#1a1400" rx="2" stroke="rgba(186,117,23,0.2)" stroke-width="0.5"/>
+                <text x="190" y="64" text-anchor="middle" font-size="9" fill="#ba7517" font-family="monospace">waiting for client accept · soft reservation active · TTL ticking</text>
+
+                <line x1="60" y1="88" x2="173" y2="88" stroke="#4a5570" stroke-width="1" marker-end="url(#ex6)"/>
+                <text x="118" y="84" text-anchor="middle" font-size="9" fill="#6a7fa8">Check expired requests</text>
+                <line x1="180" y1="102" x2="283" y2="102" stroke="#4a5570" stroke-width="1" marker-end="url(#ex6)"/>
+                <text x="232" y="98" text-anchor="middle" font-size="9" fill="#6a7fa8">Find APPROVED older than TTL</text>
+                <line x1="283" y1="116" x2="187" y2="116" stroke="#a32d2d" stroke-width="1" marker-end="url(#ex6e)"/>
+                <text x="232" y="112" text-anchor="middle" font-size="9" fill="#c05050">Expired requests found</text>
+
+                <line x1="180" y1="130" x2="283" y2="130" stroke="#4a5570" stroke-width="1" marker-end="url(#ex6)"/>
+                <text x="232" y="126" text-anchor="middle" font-size="9" fill="#6a7fa8">Mark as EXPIRED</text>
+
+                <line x1="180" y1="148" x2="353" y2="148" stroke="#4a5570" stroke-width="1" marker-end="url(#ex6)"/>
+                <text x="268" y="144" text-anchor="middle" font-size="9" fill="#6a7fa8">Release soft reservation</text>
+                <line x1="353" y1="162" x2="187" y2="162" stroke="#3b6d11" stroke-width="1" marker-end="url(#ex6r)"/>
+                <text x="268" y="158" text-anchor="middle" font-size="9" fill="#5a8a40">Reservation released — capacity back to pool</text>
+
+                <path d="M180 176 Q155 184 180 192" fill="none" stroke="#a32d2d" stroke-width="1" marker-end="url(#ex6e)"/>
+                <text x="133" y="187" font-size="9" fill="#c05050">→ request.expired event</text>
+
+                <rect x="20" y="206" width="340" height="28" fill="rgba(127,119,221,0.06)" rx="3" stroke="rgba(127,119,221,0.2)" stroke-width="0.5"/>
+                <text x="190" y="224" text-anchor="middle" font-size="9" fill="#9990e8">Capacity returned to pool — visible to new requests immediately</text>
+
+                <rect x="20" y="246" width="340" height="28" fill="rgba(186,117,23,0.06)" rx="3" stroke="rgba(186,117,23,0.2)" stroke-width="0.5"/>
+                <text x="190" y="264" text-anchor="middle" font-size="9" fill="#ba7517">Scheduler runs periodically (e.g. every 60s) — not event-triggered</text>
+              </svg>
+            </div>
+            <div class="flow-notes">
+              <div class="flow-note">
+                <div class="flow-note-phase">Scheduler trigger</div>
+                <div class="flow-note-text">A background scheduler runs periodically (e.g. every 60s) and scans the request DB for APPROVED requests older than the TTL threshold. This is not event-triggered — it is a polling job.</div>
+              </div>
+              <div class="flow-note">
+                <div class="flow-note-phase">Reservation release</div>
+                <div class="flow-note-text">For each expired request, the soft reservation is released on CAPI. Capacity returns to the pool immediately and becomes visible to new incoming requests — preventing capacity from being locked indefinitely.</div>
+              </div>
+              <div class="flow-note">
+                <div class="flow-note-phase">Event published</div>
+                <div class="flow-note-text">A <code>request.expired</code> event is published to the backbone. Downstream subscribers (e.g. notification service, analytics) can react accordingly. The client is not actively notified unless they poll the request status endpoint.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end edge-grid -->
+
     </div><!-- end flows-panel -->
   </div><!-- end panel-flows -->
 
@@ -1894,7 +2430,7 @@
     </div>
     <div class="footer-meta">
       <div class="footer-doc-title">Satellite Capacity Orchestration Platform</div>
-      <div class="footer-doc-sub">Solution Architecture · Draft v1.2.1<br>Orchestration · Beam eligibility · Capacity management</div>
+      <div class="footer-doc-sub">Solution Architecture · Draft v1.3.0<br>Orchestration · Beam eligibility · Capacity management</div>
     </div>
   </div>
 </footer>
