@@ -841,7 +841,7 @@
   <!-- ════════ TAB: HERO ════════ -->
   <div class="tab-panel active" id="panel-hero" style="grid-column: 1 / -1;">
     <div class="hero-panel">
-      <div class="hero-badge">Solution Architecture · Draft v1.2.0</div>
+      <div class="hero-badge">Solution Architecture · Draft v1.2.1</div>
       <h1 class="hero-title">Satellite Capacity<br><span>Orchestration</span> Platform</h1>
       <p class="hero-lead">A unified orchestration layer that coordinates capacity requests across the full satellite ground segment — from customer order to beam reservation — in a single, auditable workflow.</p>
 
@@ -1894,7 +1894,7 @@
     </div>
     <div class="footer-meta">
       <div class="footer-doc-title">Satellite Capacity Orchestration Platform</div>
-      <div class="footer-doc-sub">Solution Architecture · Draft v1.2.0<br>Orchestration · Beam eligibility · Capacity management</div>
+      <div class="footer-doc-sub">Solution Architecture · Draft v1.2.1<br>Orchestration · Beam eligibility · Capacity management</div>
     </div>
   </div>
 </footer>
@@ -1981,27 +1981,16 @@
 
 
   // ── E2E Flow expand/collapse ──
-  let expandedFlow = null;
   function expandFlow(id) {
     const card = document.getElementById('fc-' + id);
     if (!card) return;
-    if (expandedFlow === id) {
-      card.classList.remove('expanded');
-      card.onclick = () => expandFlow(id);
-      expandedFlow = null;
-      return;
+    const isExpanded = card.classList.contains('expanded');
+    // Collapse all cards first
+    document.querySelectorAll('.flow-card').forEach(c => c.classList.remove('expanded'));
+    // If it wasn't already expanded, expand it now
+    if (!isExpanded) {
+      card.classList.add('expanded');
     }
-    // Collapse previous
-    if (expandedFlow) {
-      const prev = document.getElementById('fc-' + expandedFlow);
-      if (prev) {
-        prev.classList.remove('expanded');
-        prev.onclick = () => expandFlow(expandedFlow);
-      }
-    }
-    card.classList.add('expanded');
-    card.onclick = () => expandFlow(id);
-    expandedFlow = id;
   }
 
 </script>
