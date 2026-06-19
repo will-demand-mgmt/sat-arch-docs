@@ -817,7 +817,7 @@
 
   /* ── Design Reference sub-nav ── */
   .subnav {
-    display: flex;
+    display: flex !important;
     gap: 2px;
     border-bottom: 1px solid var(--border);
     margin-bottom: 0;
@@ -876,7 +876,7 @@
   <!-- ════════ TAB: HERO ════════ -->
   <div class="tab-panel active" id="panel-hero" style="grid-column: 1 / -1;">
     <div class="hero-panel">
-      <div class="hero-badge">Solution Architecture · Draft v1.4.5</div>
+      <div class="hero-badge">Solution Architecture · Draft v1.4.6</div>
       <h1 class="hero-title">Satellite Capacity<br><span>Orchestration</span> Platform</h1>
       <p class="hero-lead">A unified orchestration layer that coordinates capacity requests across the full satellite ground segment — from customer order to beam reservation — in a single, auditable workflow.</p>
 
@@ -2464,7 +2464,6 @@
     <!-- ── Data Model ── -->
     <div class="stab-panel active" id="stab-datamodel">
       <p style="font-size:13px;color:var(--text-muted);margin:24px 0;max-width:640px;line-height:1.65;">Entity-relationship diagram of the six core data entities. Click any entity to see field details and design rationale.</p>
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:24px;max-width:640px;line-height:1.65;">Entity-relationship diagram of the six core data entities. Click any entity to see field details and design rationale.</p>
         <div style="display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start;">
           <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;overflow:auto;">
             <svg viewBox="0 0 700 620" xmlns="http://www.w3.org/2000/svg" font-family="'Inter',sans-serif" style="width:100%;display:block;">
@@ -2596,7 +2595,6 @@
     <!-- ── State Machine ── -->
     <div class="stab-panel" id="stab-statemachine">
       <p style="font-size:13px;color:var(--text-muted);margin:24px 0;max-width:640px;line-height:1.65;">Complete request lifecycle — 13 states. Click any state for semantic details, transition triggers, and expected duration.</p>
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:24px;max-width:640px;line-height:1.65;">Complete request lifecycle. Click any state for semantic details, transition triggers, and expected duration.</p>
         <div style="display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start;">
           <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;overflow:auto;">
              viewBox="0 0 680 660" xmlns="http://www.w3.org/2000/svg" font-family="'Inter',sans-serif" style="width:100%;display:block;">
@@ -2785,8 +2783,6 @@
     <!-- ── Implementation Principles ── -->
     <div class="stab-panel" id="stab-principles">
       <p style="font-size:13px;color:var(--text-muted);margin:24px 0;max-width:640px;line-height:1.65;">Five non-negotiable principles to enforce across the entire development team.</p>
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:24px;max-width:640px;line-height:1.65;">Five non-negotiable principles to enforce across the entire development team.</p>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:28px;max-width:640px;line-height:1.65;">Five non-negotiable principles to enforce across the entire development team.</p>
       <div style="display:flex;flex-direction:column;gap:16px;">
 
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:start;">
@@ -2853,7 +2849,7 @@
     </div>
     <div class="footer-meta">
       <div class="footer-doc-title">Satellite Capacity Orchestration Platform</div>
-      <div class="footer-doc-sub">Solution Architecture · Draft v1.4.5<br>Orchestration · Beam eligibility · Capacity management</div>
+      <div class="footer-doc-sub">Solution Architecture · Draft v1.4.6<br>Orchestration · Beam eligibility · Capacity management</div>
     </div>
   </div>
 </footer>
