@@ -814,6 +814,7 @@
   }
   .dtab:hover { color: var(--text-muted); }
   .dtab.active { color: var(--text); border-bottom-color: var(--teal); }
+  .dsub { padding-top: 28px; }
 </style>
 </head>
 <body>
@@ -851,7 +852,7 @@
   <!-- ════════ TAB: HERO ════════ -->
   <div class="tab-panel active" id="panel-hero" style="grid-column: 1 / -1;">
     <div class="hero-panel">
-      <div class="hero-badge">Solution Architecture · Draft v1.4.2</div>
+      <div class="hero-badge">Solution Architecture · Draft v1.4.3</div>
       <h1 class="hero-title">Satellite Capacity<br><span>Orchestration</span> Platform</h1>
       <p class="hero-lead">A unified orchestration layer that coordinates capacity requests across the full satellite ground segment — from customer order to beam reservation — in a single, auditable workflow.</p>
 
@@ -2430,7 +2431,7 @@
   <div class="tab-panel" id="panel-design" style="max-width:1100px; margin:0 auto; padding:32px 40px 64px;">
 
     <!-- Sub-nav -->
-    <div style="display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:32px;">
+    <div style="display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:0; margin-top:8px;">
       <div class="dtab active" data-dsub="datamodel">Data model</div>
       <div class="dtab" data-dsub="statemachine">State machine</div>
       <div class="dtab" data-dsub="principles">Implementation principles</div>
@@ -2822,7 +2823,7 @@
     </div>
     <div class="footer-meta">
       <div class="footer-doc-title">Satellite Capacity Orchestration Platform</div>
-      <div class="footer-doc-sub">Solution Architecture · Draft v1.4.2<br>Orchestration · Beam eligibility · Capacity management</div>
+      <div class="footer-doc-sub">Solution Architecture · Draft v1.4.3<br>Orchestration · Beam eligibility · Capacity management</div>
     </div>
   </div>
 </footer>
