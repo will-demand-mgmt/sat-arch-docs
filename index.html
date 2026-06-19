@@ -815,6 +815,44 @@
   .dtab:hover { color: var(--text-muted); }
   .dtab.active { color: var(--text); border-bottom-color: var(--teal); }
   .dsub { padding-top: 28px; }
+
+  /* ── Design Reference sections ── */
+  .dr-section {
+    margin-bottom: 56px;
+  }
+  .dr-section-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 24px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border-bottom: 2px solid var(--accent);
+  }
+  .dr-section-number {
+    font-size: 28px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    opacity: 0.5;
+    line-height: 1;
+    min-width: 40px;
+  }
+  .dr-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .dr-section-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+  .dr-section-body {
+    padding: 28px 0 0;
+  }
 </style>
 </head>
 <body>
@@ -852,7 +890,7 @@
   <!-- ════════ TAB: HERO ════════ -->
   <div class="tab-panel active" id="panel-hero" style="grid-column: 1 / -1;">
     <div class="hero-panel">
-      <div class="hero-badge">Solution Architecture · Draft v1.4.3</div>
+      <div class="hero-badge">Solution Architecture · Draft v1.4.4</div>
       <h1 class="hero-title">Satellite Capacity<br><span>Orchestration</span> Platform</h1>
       <p class="hero-lead">A unified orchestration layer that coordinates capacity requests across the full satellite ground segment — from customer order to beam reservation — in a single, auditable workflow.</p>
 
@@ -2430,19 +2468,20 @@
   <!-- ════════ TAB: DESIGN REFERENCE ════════ -->
   <div class="tab-panel" id="panel-design" style="max-width:1100px; margin:0 auto; padding:32px 40px 64px;">
 
-    <!-- Sub-nav -->
-    <div style="display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:0; margin-top:8px;">
-      <div class="dtab active" data-dsub="datamodel">Data model</div>
-      <div class="dtab" data-dsub="statemachine">State machine</div>
-      <div class="dtab" data-dsub="principles">Implementation principles</div>
-    </div>
-
-    <!-- ── Data Model ── -->
-    <div class="dsub active" id="dsub-datamodel">
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:28px;max-width:640px;line-height:1.65;">Entity-relationship diagram of the six core data entities. Click any entity to see field details and design rationale.</p>
-      <div style="display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start;">
-        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;overflow:auto;">
-          <svg viewBox="0 0 700 620" xmlns="http://www.w3.org/2000/svg" font-family="'Inter',sans-serif" style="width:100%;display:block;">
+    <!-- ══ SECTION 1: Data Model ══ -->
+    <div class="dr-section">
+      <div class="dr-section-header">
+        <div class="dr-section-number">01</div>
+        <div>
+          <div class="dr-section-title">Data Model</div>
+          <div class="dr-section-sub">Six core entities — production-grade schema</div>
+        </div>
+      </div>
+      <div class="dr-section-body">
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:24px;max-width:640px;line-height:1.65;">Entity-relationship diagram of the six core data entities. Click any entity to see field details and design rationale.</p>
+        <div style="display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start;">
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;overflow:auto;">
+            <svg viewBox="0 0 700 620" xmlns="http://www.w3.org/2000/svg" font-family="'Inter',sans-serif" style="width:100%;display:block;">
 
             <!-- CapacityRequest (center-top) -->
             <g class="node" onclick="showEntityDetail('request')" style="cursor:pointer;">
@@ -2556,24 +2595,31 @@
               </marker>
             </defs>
           </svg>
-        </div>
-
-        <!-- Entity detail panel -->
-        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;position:sticky;top:24px;">
-          <div style="padding:14px 18px;border-bottom:1px solid var(--border);font-size:11px;font-family:var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Entity detail</div>
-          <div id="entity-detail-body" style="padding:18px;min-height:200px;">
-            <p style="font-size:12px;color:var(--text-dim);font-style:italic;">Click any entity to see field details and design notes.</p>
+          </div>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;position:sticky;top:24px;">
+            <div style="padding:14px 18px;border-bottom:1px solid var(--border);font-size:11px;font-family:var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Entity detail</div>
+            <div id="entity-detail-body" style="padding:18px;min-height:200px;">
+              <p style="font-size:12px;color:var(--text-dim);font-style:italic;">Click any entity to see field details and design notes.</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ── State Machine ── -->
-    <div class="dsub" id="dsub-statemachine" style="display:none;">
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:28px;max-width:640px;line-height:1.65;">Complete request lifecycle. Click any state for semantic details, transition triggers, and expected duration.</p>
-      <div style="display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start;">
-        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;overflow:auto;">
-          <svg viewBox="0 0 680 660" xmlns="http://www.w3.org/2000/svg" font-family="'Inter',sans-serif" style="width:100%;display:block;">
+    <!-- ══ SECTION 2: State Machine ══ -->
+    <div class="dr-section">
+      <div class="dr-section-header">
+        <div class="dr-section-number">02</div>
+        <div>
+          <div class="dr-section-title">State Machine</div>
+          <div class="dr-section-sub">Complete request lifecycle — 13 states</div>
+        </div>
+      </div>
+      <div class="dr-section-body">
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:24px;max-width:640px;line-height:1.65;">Complete request lifecycle. Click any state for semantic details, transition triggers, and expected duration.</p>
+        <div style="display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start;">
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;overflow:auto;">
+             viewBox="0 0 680 660" xmlns="http://www.w3.org/2000/svg" font-family="'Inter',sans-serif" style="width:100%;display:block;">
             <defs>
               <marker id="sm" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#4a5570" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
               <marker id="sm-ok" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#3b6d11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
@@ -2751,12 +2797,22 @@
             <p style="font-size:12px;color:var(--text-dim);font-style:italic;">Click any state to see its semantic meaning, transition triggers, and expected duration.</p>
           </div>
         </div>
-      </div>
-    </div>
+        </div><!-- end sm grid -->
+      </div><!-- end dr-section-body -->
+    </div><!-- end dr-section 02 -->
 
-    <!-- ── Implementation Principles ── -->
-    <div class="dsub" id="dsub-principles" style="display:none;">
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:28px;max-width:640px;line-height:1.65;">Five non-negotiable principles to enforce across the entire development team.</p>
+    <!-- ══ SECTION 3: Implementation Principles ══ -->
+    <div class="dr-section">
+      <div class="dr-section-header">
+        <div class="dr-section-number">03</div>
+        <div>
+          <div class="dr-section-title">Implementation Principles</div>
+          <div class="dr-section-sub">Five non-negotiable rules for the development team</div>
+        </div>
+      </div>
+      <div class="dr-section-body">
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:24px;max-width:640px;line-height:1.65;">Five non-negotiable principles to enforce across the entire development team.</p>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:28px;max-width:640px;line-height:1.65;">Five non-negotiable principles to enforce across the entire development team.</p>
       <div style="display:flex;flex-direction:column;gap:16px;">
 
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:start;">
@@ -2805,6 +2861,7 @@
         </div>
 
       </div>
+      </div>
     </div>
 
   </div><!-- end panel-design -->
@@ -2823,7 +2880,7 @@
     </div>
     <div class="footer-meta">
       <div class="footer-doc-title">Satellite Capacity Orchestration Platform</div>
-      <div class="footer-doc-sub">Solution Architecture · Draft v1.4.3<br>Orchestration · Beam eligibility · Capacity management</div>
+      <div class="footer-doc-sub">Solution Architecture · Draft v1.4.4<br>Orchestration · Beam eligibility · Capacity management</div>
     </div>
   </div>
 </footer>
@@ -2949,16 +3006,6 @@
       });
     }
   }
-  document.querySelectorAll('.dtab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.dtab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.dsub').forEach(s => s.style.display = 'none');
-      tab.classList.add('active');
-      const sub = document.getElementById('dsub-' + tab.dataset.dsub);
-      if (sub) sub.style.display = 'block';
-    });
-  });
-
   // ── Entity detail panel ──
   const entityDetails = {
     request: {
