@@ -986,7 +986,7 @@
   <!-- ════════ TAB: HERO ════════ -->
   <div class="tab-panel active" id="panel-hero" style="grid-column: 1 / -1;">
     <div class="hero-panel">
-      <div class="hero-badge">Solution Architecture · Draft v1.6.0</div>
+      <div class="hero-badge">Solution Architecture · Draft v1.7.0</div>
       <h1 class="hero-title">Satellite Capacity<br><span>Orchestration</span> Platform</h1>
       <p class="hero-lead">A unified orchestration layer that coordinates capacity requests across the full satellite ground segment — from customer order to beam reservation — in a single, auditable workflow.</p>
 
@@ -2675,155 +2675,129 @@
 
 
 
-  <!-- ════════ TAB: HLA ════════ -->
+<!-- ════════ TAB: HLA ════════ -->
   <div class="tab-panel" id="panel-hla">
-    <div class="hla-wrap" style="max-width:900px;margin:0 auto;padding:32px 40px 80px;">
+    <div class="hla-wrap" style="max-width:960px;margin:0 auto;padding:32px 40px 80px;">
 
       <!-- Print button -->
       <div class="hla-print-btn" style="display:flex;justify-content:flex-end;margin-bottom:24px;">
-        <button onclick="window.print()" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);">
-          ⎙ Print / Save as PDF
-        </button>
+        <button onclick="window.print()" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);">⎙ Print / Save as PDF</button>
       </div>
 
       <!-- Cover -->
-      <div class="hla-cover" style="border:1px solid var(--border);border-radius:var(--radius-lg);padding:40px;margin-bottom:40px;background:var(--bg2);">
-        <div style="font-size:11px;font-family:var(--font-mono);letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;">High Level Assessment</div>
-        <div style="font-size:32px;font-weight:700;letter-spacing:-0.02em;color:var(--text);margin-bottom:8px;">Satellite Capacity<br>Orchestration Platform</div>
-        <div style="font-size:14px;color:var(--text-muted);margin-bottom:32px;">Integration of GCRM · CAPI · CP · OSS · MCM</div>
-        <div style="display:grid;grid-template-columns:160px 1fr;gap:8px 16px;font-size:13px;">
-          <span style="color:var(--text-dim);font-family:var(--font-mono);font-size:11px;">DOCUMENT TYPE</span><span style="color:var(--text-muted);">High Level Assessment (HLA)</span>
-          <span style="color:var(--text-dim);font-family:var(--font-mono);font-size:11px;">AUTHOR</span><span style="color:var(--text-muted);">Alberto Pavani</span>
-          <span style="color:var(--text-dim);font-family:var(--font-mono);font-size:11px;">VERSION</span><span style="color:var(--text-muted);">v1.0 — Draft</span>
-          <span style="color:var(--text-dim);font-family:var(--font-mono);font-size:11px;">IMPACT</span><span style="color:var(--text-muted);">High — direct impact on revenue and customer contracts</span>
-          <span style="color:var(--text-dim);font-family:var(--font-mono);font-size:11px;">TIMELINE</span><span style="color:var(--text-muted);">6–12 months to first production release</span>
+      <div class="hla-section hla-cover" style="border:1px solid var(--border);border-radius:var(--radius-lg);padding:40px;margin-bottom:40px;background:var(--bg2);">
+        <div style="font-size:11px;font-family:var(--font-mono);letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">High Level Assessment</div>
+        <div style="font-size:30px;font-weight:700;color:var(--text);margin-bottom:6px;">Satellite Capacity Orchestration Platform</div>
+        <div style="font-size:16px;font-weight:600;color:var(--accent);margin-bottom:6px;">Flexible MHz – Phase 3.4</div>
+        <div style="font-size:14px;color:var(--text-muted);margin-bottom:28px;">Integration of GCRM · CAPI · CP · OSS · MCM</div>
+        <div style="display:grid;grid-template-columns:160px 1fr;gap:6px 16px;font-size:12px;">
+          <span style="color:var(--text-dim);font-family:var(--font-mono);font-size:10px;">REFERENCE BRD/FRD</span><span style="color:var(--text-muted);">Flexible MHz Phase 3.4 – BRD &amp; FRD v1.0</span>
+          <span style="color:var(--text-dim);font-family:var(--font-mono);font-size:10px;">VERSION</span><span style="color:var(--text-muted);">v1.1 — Draft for Review</span>
+          <span style="color:var(--text-dim);font-family:var(--font-mono);font-size:10px;">AUTHOR</span><span style="color:var(--text-muted);">Alberto Pavani</span>
+          <span style="color:var(--text-dim);font-family:var(--font-mono);font-size:10px;">BUSINESS IMPACT</span><span style="color:var(--text-muted);">High — direct impact on revenue and customer contracts</span>
+          <span style="color:var(--text-dim);font-family:var(--font-mono);font-size:10px;">TARGET GO-LIVE</span><span style="color:var(--text-muted);">6–12 months</span>
         </div>
       </div>
 
       <!-- 1. Executive Summary -->
       <div class="hla-section" style="margin-bottom:40px;">
-        <div style="font-size:20px;font-weight:700;color:var(--text);border-bottom:2px solid var(--accent);padding-bottom:8px;margin-bottom:16px;">1. Executive Summary</div>
-        <p style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:12px;">This High Level Assessment covers the design and integration of a Satellite Capacity Orchestration Platform — a middleware layer that connects five existing backend systems (GCRM, CAPI, CP, OSS, MCM) through a single, orchestrated API. The platform automates the full lifecycle of satellite capacity requests, replacing today's manual, error-prone coordination process.</p>
-        <p style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:20px;">The primary technical risk is the legacy nature of the systems to be integrated — none of the five target systems currently exposes a documented, stable API. This is the single largest driver of effort and schedule uncertainty.</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
-          <div style="background:rgba(29,158,117,0.1);border:1px solid rgba(29,158,117,0.3);border-radius:var(--radius);padding:16px;">
-            <div style="font-size:11px;font-family:var(--font-mono);color:#70d4b0;margin-bottom:6px;">FEASIBILITY</div>
-            <div style="font-size:13px;color:var(--text);">✓ Feasible</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Architecture well-defined, patterns proven</div>
-          </div>
-          <div style="background:rgba(186,117,23,0.1);border:1px solid rgba(186,117,23,0.3);border-radius:var(--radius);padding:16px;">
-            <div style="font-size:11px;font-family:var(--font-mono);color:#fac775;margin-bottom:6px;">RISK LEVEL</div>
-            <div style="font-size:13px;color:var(--text);">⚠ Medium-High</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Legacy API uncertainty is key driver</div>
-          </div>
-          <div style="background:rgba(59,111,212,0.1);border:1px solid rgba(59,111,212,0.3);border-radius:var(--radius);padding:16px;">
-            <div style="font-size:11px;font-family:var(--font-mono);color:#7aa4f0;margin-bottom:6px;">RECOMMENDATION</div>
-            <div style="font-size:13px;color:var(--text);">Proceed</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Subject to API discovery sprint</div>
-          </div>
+        <div style="font-size:18px;font-weight:700;color:var(--text);border-bottom:2px solid var(--accent);padding-bottom:8px;margin-bottom:16px;">1. Executive Summary</div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:16px;">Fully automated, API-driven orchestration platform enabling dynamic reallocation of contracted MHz capacity across predefined beam sets. Replaces manual coordination with a single orchestrated workflow targeting end-to-end execution within 15 minutes.</p>
+        <div style="background:rgba(186,117,23,0.08);border:1px solid rgba(186,117,23,0.3);border-radius:var(--radius);padding:14px 18px;margin-bottom:16px;font-size:12px;color:var(--text-muted);line-height:1.65;">
+          <strong style="color:#fac775;">⚠ Critical assumption gap:</strong> BRD Section 7.1 assumes all downstream systems expose stable, versioned APIs. Field assessment indicates this is NOT currently the case for any of the five systems. This is the primary risk and must be validated in Phase 0 before any development commitment.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:0;">
+          <div style="background:rgba(29,158,117,0.1);border:1px solid rgba(29,158,117,0.3);border-radius:var(--radius);padding:14px;"><div style="font-size:10px;font-family:var(--font-mono);color:#70d4b0;margin-bottom:5px;">FEASIBILITY</div><div style="font-size:13px;font-weight:600;color:var(--text);">✓ Feasible</div></div>
+          <div style="background:rgba(186,117,23,0.1);border:1px solid rgba(186,117,23,0.3);border-radius:var(--radius);padding:14px;"><div style="font-size:10px;font-family:var(--font-mono);color:#fac775;margin-bottom:5px;">RISK LEVEL</div><div style="font-size:13px;font-weight:600;color:var(--text);">⚠ Med-High</div></div>
+          <div style="background:rgba(59,111,212,0.1);border:1px solid rgba(59,111,212,0.3);border-radius:var(--radius);padding:14px;"><div style="font-size:10px;font-family:var(--font-mono);color:#7aa4f0;margin-bottom:5px;">BRD COVERAGE</div><div style="font-size:13px;font-weight:600;color:var(--text);">8/8 BR</div></div>
+          <div style="background:rgba(59,111,212,0.1);border:1px solid rgba(59,111,212,0.3);border-radius:var(--radius);padding:14px;"><div style="font-size:10px;font-family:var(--font-mono);color:#7aa4f0;margin-bottom:5px;">FRD COVERAGE</div><div style="font-size:13px;font-weight:600;color:var(--text);">14/17 FR</div></div>
         </div>
       </div>
 
-      <!-- 2. Scope -->
+      <!-- 2. Effort & Timeline -->
       <div class="hla-section" style="margin-bottom:40px;">
-        <div style="font-size:20px;font-weight:700;color:var(--text);border-bottom:2px solid var(--accent);padding-bottom:8px;margin-bottom:16px;">2. Scope</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-          <div style="background:rgba(29,158,117,0.06);border:1px solid rgba(29,158,117,0.2);border-radius:var(--radius);padding:16px;">
-            <div style="font-size:12px;font-family:var(--font-mono);color:#70d4b0;margin-bottom:10px;">IN SCOPE</div>
-            <div style="font-size:12px;color:var(--text-muted);line-height:1.8;">
-              Orchestration API (REST + OAuth2)<br>
-              Integration adapters ×5 systems<br>
-              Saga engine with retry + rollback<br>
-              State machine and audit log<br>
-              Event backbone (pub/sub)
-            </div>
-          </div>
-          <div style="background:rgba(163,45,45,0.06);border:1px solid rgba(163,45,45,0.2);border-radius:var(--radius);padding:16px;">
-            <div style="font-size:12px;font-family:var(--font-mono);color:#e07070;margin-bottom:10px;">OUT OF SCOPE</div>
-            <div style="font-size:12px;color:var(--text-muted);line-height:1.8;">
-              UI / customer portal<br>
-              Modifications to legacy systems<br>
-              Billing and invoicing<br>
-              Capacity planning algorithms<br>
-              Real-time monitoring dashboards
-            </div>
-          </div>
+        <div style="font-size:18px;font-weight:700;color:var(--text);border-bottom:2px solid var(--accent);padding-bottom:8px;margin-bottom:16px;">2. Effort &amp; Timeline</div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">Person-days (pd) — 1 pd = 8h, mid-to-senior engineer profile. Subject to revision after Phase 0.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;">
+          <div style="background:rgba(29,158,117,0.1);border:1px solid rgba(29,158,117,0.3);border-radius:var(--radius);padding:16px;"><div style="font-size:10px;font-family:var(--font-mono);color:#70d4b0;margin-bottom:6px;">OPTIMISTIC</div><div style="font-size:26px;font-weight:700;color:#70d4b0;">120 pd</div><div style="font-size:12px;color:var(--text-muted);">~6 months</div></div>
+          <div style="background:rgba(186,117,23,0.1);border:1px solid rgba(186,117,23,0.3);border-radius:var(--radius);padding:16px;"><div style="font-size:10px;font-family:var(--font-mono);color:#fac775;margin-bottom:6px;">PESSIMISTIC</div><div style="font-size:26px;font-weight:700;color:#fac775;">210 pd</div><div style="font-size:12px;color:var(--text-muted);">~12 months</div></div>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;"><div style="font-size:10px;font-family:var(--font-mono);color:var(--text-dim);margin-bottom:6px;">KEY RISK DRIVER</div><div style="font-size:14px;font-weight:600;color:#e07070;">Legacy API discovery</div><div style="font-size:12px;color:var(--text-muted);">+30–60 pd if APIs absent</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:grid;grid-template-columns:90px 100px 80px 80px 1fr;gap:10px;align-items:center;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;font-size:11px;font-family:var(--font-mono);color:var(--text-dim);">PHASE<span>NAME</span><span>OPT.</span><span>PESS.</span><span>KEY DEPENDENCY</span></div>
+          <div style="display:grid;grid-template-columns:90px 100px 80px 80px 1fr;gap:10px;align-items:center;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--accent);">Phase 0</span><span style="font-size:12px;color:var(--text-muted);">API Discovery</span><span style="font-size:12px;color:#70d4b0);">15 pd</span><span style="font-size:12px;color:#fac775;">25 pd</span><span style="font-size:12px;color:var(--text-muted);">System owners available</span></div>
+          <div style="display:grid;grid-template-columns:90px 100px 80px 80px 1fr;gap:10px;align-items:center;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--accent);">Phase 1</span><span style="font-size:12px;color:var(--text-muted);">HLD</span><span style="font-size:12px;color:var(--text);">15 pd</span><span style="font-size:12px;color:var(--text);">20 pd</span><span style="font-size:12px;color:var(--text-muted);">Phase 0 outcome; arch sign-off</span></div>
+          <div style="display:grid;grid-template-columns:90px 100px 80px 80px 1fr;gap:10px;align-items:center;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--accent);">Phase 2</span><span style="font-size:12px;color:var(--text-muted);">LLD</span><span style="font-size:12px;color:var(--text);">20 pd</span><span style="font-size:12px;color:var(--text);">30 pd</span><span style="font-size:12px;color:var(--text-muted);">HLD approved; all 5 API specs available</span></div>
+          <div style="display:grid;grid-template-columns:90px 100px 80px 80px 1fr;gap:10px;align-items:center;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--accent);">Phase 3</span><span style="font-size:12px;color:var(--text-muted);">Implementation</span><span style="font-size:12px;color:var(--text);">40 pd</span><span style="font-size:12px;color:var(--text);">80 pd</span><span style="font-size:12px;color:var(--text-muted);">LLD approved; dev environment ready</span></div>
+          <div style="display:grid;grid-template-columns:90px 100px 80px 80px 1fr;gap:10px;align-items:center;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--accent);">Phase 4</span><span style="font-size:12px;color:var(--text-muted);">E2E Test &amp; UAT</span><span style="font-size:12px;color:var(--text);">20 pd</span><span style="font-size:12px;color:var(--text);">40 pd</span><span style="font-size:12px;color:var(--text-muted);">All components delivered; test envs ready</span></div>
+          <div style="display:grid;grid-template-columns:90px 100px 80px 80px 1fr;gap:10px;align-items:center;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--accent);">Phase 5</span><span style="font-size:12px;color:var(--text-muted);">Release &amp; Care</span><span style="font-size:12px;color:var(--text);">10 pd</span><span style="font-size:12px;color:var(--text);">15 pd</span><span style="font-size:12px;color:var(--text-muted);">UAT sign-off; production ready</span></div>
         </div>
       </div>
 
-      <!-- 3. Risk Assessment -->
+      <!-- 3. BRD/FRD Coverage -->
       <div class="hla-section" style="margin-bottom:40px;">
-        <div style="font-size:20px;font-weight:700;color:var(--text);border-bottom:2px solid var(--accent);padding-bottom:8px;margin-bottom:16px;">3. Risk Assessment</div>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="display:grid;grid-template-columns:48px 1fr 80px;gap:12px;align-items:start;background:rgba(163,45,45,0.08);border:1px solid rgba(163,45,45,0.25);border-radius:var(--radius);padding:14px;">
-            <div style="font-size:11px;font-family:var(--font-mono);color:#e07070;font-weight:700;padding-top:2px;">HIGH</div>
-            <div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">Legacy systems without documented APIs</div><div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Reverse engineering required for all 5 adapters. Risk of +3–6 months on schedule.</div><div style="font-size:11px;color:var(--text-dim);margin-top:6px;font-family:var(--font-mono);">Mitigation: API discovery sprint in first 4 weeks. Involve system owners immediately.</div></div>
-          </div>
-          <div style="display:grid;grid-template-columns:48px 1fr 80px;gap:12px;align-items:start;background:rgba(186,117,23,0.08);border:1px solid rgba(186,117,23,0.25);border-radius:var(--radius);padding:14px;">
-            <div style="font-size:11px;font-family:var(--font-mono);color:#fac775;font-weight:700;padding-top:2px;">MED</div>
-            <div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">No existing integration infrastructure</div><div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Platform must be built from scratch — additional effort for foundational components.</div><div style="font-size:11px;color:var(--text-dim);margin-top:6px;font-family:var(--font-mono);">Mitigation: Reuse open-source components (API gateway, event bus).</div></div>
-          </div>
-          <div style="display:grid;grid-template-columns:48px 1fr 80px;gap:12px;align-items:start;background:rgba(186,117,23,0.08);border:1px solid rgba(186,117,23,0.25);border-radius:var(--radius);padding:14px;">
-            <div style="font-size:11px;font-family:var(--font-mono);color:#fac775;font-weight:700;padding-top:2px;">MED</div>
-            <div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">Internal team capacity</div><div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Concurrent projects may impact team availability and cause delivery delays.</div><div style="font-size:11px;color:var(--text-dim);margin-top:6px;font-family:var(--font-mono);">Mitigation: Confirm team allocation before project start.</div></div>
-          </div>
-          <div style="display:grid;grid-template-columns:48px 1fr 80px;gap:12px;align-items:start;background:rgba(59,111,212,0.06);border:1px solid rgba(59,111,212,0.2);border-radius:var(--radius);padding:14px;">
-            <div style="font-size:11px;font-family:var(--font-mono);color:#7aa4f0;font-weight:700;padding-top:2px;">LOW</div>
-            <div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">ROLLBACK_FAILED scenario</div><div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Compensation failure leaves systems inconsistent. Requires manual intervention.</div><div style="font-size:11px;color:var(--text-dim);margin-top:6px;font-family:var(--font-mono);">Mitigation: Define runbook and escalation procedure before go-live.</div></div>
-          </div>
+        <div style="font-size:18px;font-weight:700;color:var(--text);border-bottom:2px solid var(--accent);padding-bottom:8px;margin-bottom:16px;">3. BRD / FRD Coverage</div>
+        <div style="font-size:12px;font-family:var(--font-mono);color:var(--text-dim);margin-bottom:10px;">BUSINESS REQUIREMENTS (8/8 covered)</div>
+        <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:20px;">
+          <div style="display:grid;grid-template-columns:60px 1fr 80px;gap:10px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;align-items:center;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim);">BR-01</span><span style="font-size:12px;color:var(--text-muted);">Dynamic MHz redistribution across beams</span><span style="font-size:11px;font-family:var(--font-mono);color:#70d4b0;">Full</span></div>
+          <div style="display:grid;grid-template-columns:60px 1fr 80px;gap:10px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;align-items:center;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim);">BR-02</span><span style="font-size:12px;color:var(--text-muted);">REST/JSON API access for external clients</span><span style="font-size:11px;font-family:var(--font-mono);color:#70d4b0;">Full</span></div>
+          <div style="display:grid;grid-template-columns:60px 1fr 80px;gap:10px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;align-items:center;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim);">BR-03</span><span style="font-size:12px;color:var(--text-muted);">Zero manual processing in standard path</span><span style="font-size:11px;font-family:var(--font-mono);color:#70d4b0;">Full</span></div>
+          <div style="display:grid;grid-template-columns:60px 1fr 80px;gap:10px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;align-items:center;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim);">BR-04</span><span style="font-size:12px;color:var(--text-muted);">Maximum 15-minute end-to-end execution</span><span style="font-size:11px;font-family:var(--font-mono);color:#70d4b0;">Full</span></div>
+          <div style="display:grid;grid-template-columns:60px 1fr 80px;gap:10px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;align-items:center;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim);">BR-05</span><span style="font-size:12px;color:var(--text-muted);">Enforce contract-based capacity limits</span><span style="font-size:11px;font-family:var(--font-mono);color:#70d4b0;">Full</span></div>
+          <div style="display:grid;grid-template-columns:60px 1fr 80px;gap:10px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;align-items:center;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim);">BR-06</span><span style="font-size:12px;color:var(--text-muted);">Alternative proposal on partial availability</span><span style="font-size:11px;font-family:var(--font-mono);color:#70d4b0;">Full</span></div>
+          <div style="display:grid;grid-template-columns:60px 1fr 80px;gap:10px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;align-items:center;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim);">BR-07</span><span style="font-size:12px;color:var(--text-muted);">Full audit trail of all requests and outcomes</span><span style="font-size:11px;font-family:var(--font-mono);color:#70d4b0;">Full</span></div>
+          <div style="display:grid;grid-template-columns:60px 1fr 80px;gap:10px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;align-items:center;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim);">BR-08</span><span style="font-size:12px;color:var(--text-muted);">Deterministic rules for concurrent requests</span><span style="font-size:11px;font-family:var(--font-mono);color:#fac775;">Partial</span></div>
+        </div>
+        <div style="font-size:12px;font-family:var(--font-mono);color:var(--text-dim);margin-bottom:10px;">FUNCTIONAL REQUIREMENTS (14 Full · 1 Partial · 2 Deferred)</div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <div style="display:grid;grid-template-columns:60px 1fr 80px;gap:10px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;align-items:center;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim);">FR-01–14</span><span style="font-size:12px;color:var(--text-muted);">All Must Have + Should Have requirements</span><span style="font-size:11px;font-family:var(--font-mono);color:#70d4b0;">Full</span></div>
+          <div style="display:grid;grid-template-columns:60px 1fr 80px;gap:10px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;align-items:center;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim);">FR-15</span><span style="font-size:12px;color:var(--text-muted);">Contention detection (Nice to have)</span><span style="font-size:11px;font-family:var(--font-mono);color:#fac775;">Partial</span></div>
+          <div style="display:grid;grid-template-columns:60px 1fr 80px;gap:10px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;align-items:center;"><span style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim);">FR-16–17</span><span style="font-size:12px;color:var(--text-muted);">Prioritization &amp; contention traceability (Nice to have)</span><span style="font-size:11px;font-family:var(--font-mono);color:#8080b0;">Deferred</span></div>
         </div>
       </div>
 
-      <!-- 4. Effort -->
+      <!-- 4. Risk Assessment -->
       <div class="hla-section" style="margin-bottom:40px;">
-        <div style="font-size:20px;font-weight:700;color:var(--text);border-bottom:2px solid var(--accent);padding-bottom:8px;margin-bottom:16px;">4. Effort & Timeline</div>
-        <p style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:16px;">Order-of-magnitude estimate. Subject to revision after API discovery sprint.</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1px;background:var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;">
-          <div style="background:var(--bg2);padding:12px 16px;"><div style="font-size:11px;color:var(--text-dim);font-family:var(--font-mono);margin-bottom:6px;">OPTIMISTIC</div><div style="font-size:22px;font-weight:700;color:#70d4b0;">12 PM</div><div style="font-size:11px;color:var(--text-muted);">~6 months</div></div>
-          <div style="background:var(--bg2);padding:12px 16px;"><div style="font-size:11px;color:var(--text-dim);font-family:var(--font-mono);margin-bottom:6px;">PESSIMISTIC</div><div style="font-size:22px;font-weight:700;color:#fac775;">23 PM</div><div style="font-size:11px;color:var(--text-muted);">~12 months</div></div>
-          <div style="background:var(--bg2);padding:12px 16px;"><div style="font-size:11px;color:var(--text-dim);font-family:var(--font-mono);margin-bottom:6px;">TEAM SIZE</div><div style="font-size:22px;font-weight:700;color:var(--text);">3–4</div><div style="font-size:11px;color:var(--text-muted);">engineers</div></div>
-          <div style="background:var(--bg2);padding:12px 16px;"><div style="font-size:11px;color:var(--text-dim);font-family:var(--font-mono);margin-bottom:6px;">KEY DRIVER</div><div style="font-size:14px;font-weight:600;color:#e07070;">API discovery</div><div style="font-size:11px;color:var(--text-muted);">legacy systems</div></div>
-        </div>
-        <div style="font-size:12px;font-family:var(--font-mono);color:var(--text-dim);margin-bottom:12px;">RECOMMENDED PHASING</div>
+        <div style="font-size:18px;font-weight:700;color:var(--text);border-bottom:2px solid var(--accent);padding-bottom:8px;margin-bottom:16px;">4. Risk Assessment</div>
         <div style="display:flex;flex-direction:column;gap:8px;">
-          <div style="display:grid;grid-template-columns:80px 120px 1fr;gap:12px;align-items:center;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);"><span style="font-size:12px;font-family:var(--font-mono);color:var(--accent);">PHASE 0</span><span style="font-size:12px;color:var(--text-muted);">4 weeks</span><span style="font-size:13px;color:var(--text-muted);">API discovery on all 5 systems. Go/no-go decision on timeline.</span></div>
-          <div style="display:grid;grid-template-columns:80px 120px 1fr;gap:12px;align-items:center;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);"><span style="font-size:12px;font-family:var(--font-mono);color:var(--accent);">PHASE 1</span><span style="font-size:12px;color:var(--text-muted);">3 months</span><span style="font-size:13px;color:var(--text-muted);">Core orchestration engine + GCRM + CAPI adapters. Happy path.</span></div>
-          <div style="display:grid;grid-template-columns:80px 120px 1fr;gap:12px;align-items:center;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);"><span style="font-size:12px;font-family:var(--font-mono);color:var(--accent);">PHASE 2</span><span style="font-size:12px;color:var(--text-muted);">3 months</span><span style="font-size:13px;color:var(--text-muted);">CP, OSS, MCM adapters. Full saga with rollback and edge cases.</span></div>
-          <div style="display:grid;grid-template-columns:80px 120px 1fr;gap:12px;align-items:center;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);"><span style="font-size:12px;font-family:var(--font-mono);color:var(--accent);">PHASE 3</span><span style="font-size:12px;color:var(--text-muted);">2 months</span><span style="font-size:13px;color:var(--text-muted);">Hardening, UAT, go-live preparation.</span></div>
+          <div style="display:grid;grid-template-columns:56px 1fr;gap:12px;background:rgba(163,45,45,0.08);border:1px solid rgba(163,45,45,0.25);border-radius:var(--radius);padding:14px;"><div style="font-size:11px;font-family:var(--font-mono);color:#e07070;font-weight:700;">HIGH</div><div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">Legacy systems without documented APIs</div><div style="font-size:12px;color:var(--text-muted);">Schedule risk +3–6 months. BRD assumption 7.1 not validated.</div><div style="font-size:11px;color:var(--text-dim);margin-top:5px;font-family:var(--font-mono);">Mitigation: API discovery sprint Phase 0. Go/no-go gate before Phase 1.</div></div></div>
+          <div style="display:grid;grid-template-columns:56px 1fr;gap:12px;background:rgba(186,117,23,0.08);border:1px solid rgba(186,117,23,0.25);border-radius:var(--radius);padding:14px;"><div style="font-size:11px;font-family:var(--font-mono);color:#fac775;font-weight:700;">MED</div><div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">No existing integration infrastructure</div><div style="font-size:12px;color:var(--text-muted);">+20–30pd for foundational components. Reuse open-source to mitigate.</div></div></div>
+          <div style="display:grid;grid-template-columns:56px 1fr;gap:12px;background:rgba(186,117,23,0.08);border:1px solid rgba(186,117,23,0.25);border-radius:var(--radius);padding:14px;"><div style="font-size:11px;font-family:var(--font-mono);color:#fac775;font-weight:700;">MED</div><div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">15-minute SLA — all 5 systems must respond within budget</div><div style="font-size:12px;color:var(--text-muted);">Define per-system timeout budgets in Phase 1. Load test each adapter independently.</div></div></div>
+          <div style="display:grid;grid-template-columns:56px 1fr;gap:12px;background:rgba(59,111,212,0.06);border:1px solid rgba(59,111,212,0.2);border-radius:var(--radius);padding:14px;"><div style="font-size:11px;font-family:var(--font-mono);color:#7aa4f0;font-weight:700;">LOW</div><div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">ROLLBACK_FAILED — manual intervention required</div><div style="font-size:12px;color:var(--text-muted);">Define runbook and system.critical_alert before go-live. Test in UAT.</div></div></div>
         </div>
       </div>
 
       <!-- 5. Open Questions -->
       <div class="hla-section" style="margin-bottom:40px;">
-        <div style="font-size:20px;font-weight:700;color:var(--text);border-bottom:2px solid var(--accent);padding-bottom:8px;margin-bottom:16px;">5. Open Questions</div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <div style="padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);"><span style="font-size:11px;font-family:var(--font-mono);color:var(--accent);">FOR REQUEST OWNER</span><div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Are any of the 5 legacy systems being replaced or upgraded in the next 12 months?</div></div>
-          <div style="padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);"><span style="font-size:11px;font-family:var(--font-mono);color:var(--accent);">FOR REQUEST OWNER</span><div style="font-size:13px;color:var(--text-muted);margin-top:4px;">What is the acceptable downtime if one legacy system is unavailable? Defines circuit breaker thresholds.</div></div>
-          <div style="padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid #70d4b0;border-radius:var(--radius);"><span style="font-size:11px;font-family:var(--font-mono);color:#70d4b0;">FOR DEMAND MANAGER</span><div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Who are the system owners for each of the 5 legacy systems? API discovery cannot start without this.</div></div>
-          <div style="padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);"><span style="font-size:11px;font-family:var(--font-mono);color:var(--accent);">FOR REQUEST OWNER</span><div style="font-size:13px;color:var(--text-muted);margin-top:4px;">What are the SLA targets for the new API? (response time, availability %) — drives infrastructure sizing.</div></div>
-          <div style="padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);"><span style="font-size:11px;font-family:var(--font-mono);color:var(--accent);">FOR REQUEST OWNER</span><div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Is a phased go-live acceptable, or is full functionality required at launch?</div></div>
+        <div style="font-size:18px;font-weight:700;color:var(--text);border-bottom:2px solid var(--accent);padding-bottom:8px;margin-bottom:16px;">5. Open Questions</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);"><span style="font-size:10px;font-family:var(--font-mono);color:var(--accent);">DEMAND MANAGER</span><div style="font-size:12px;color:var(--text-muted);margin-top:3px;">Who are the technical owners for each of the 5 legacy systems? API discovery cannot start without this.</div></div>
+          <div style="padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid #7aa4f0;border-radius:var(--radius);"><span style="font-size:10px;font-family:var(--font-mono);color:#7aa4f0;">REQUEST OWNER</span><div style="font-size:12px;color:var(--text-muted);margin-top:3px;">Are any of the 5 systems being replaced or upgraded in the next 12 months?</div></div>
+          <div style="padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid #7aa4f0;border-radius:var(--radius);"><span style="font-size:10px;font-family:var(--font-mono);color:#7aa4f0;">REQUEST OWNER</span><div style="font-size:12px;color:var(--text-muted);margin-top:3px;">Is a phased go-live acceptable? (Phase 3.4a: happy path only; Phase 3.4b: full)</div></div>
+          <div style="padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid #7aa4f0;border-radius:var(--radius);"><span style="font-size:10px;font-family:var(--font-mono);color:#7aa4f0;">REQUEST OWNER</span><div style="font-size:12px;color:var(--text-muted);margin-top:3px;">What are the SLA commitments to clients? (uptime, response time targets)</div></div>
+          <div style="padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid #70d4b0;border-radius:var(--radius);"><span style="font-size:10px;font-family:var(--font-mono);color:#70d4b0;">ENGINEERING LEAD</span><div style="font-size:12px;color:var(--text-muted);margin-top:3px;">What is the preferred technology stack? Confirms team skill-set and delivery confidence.</div></div>
         </div>
       </div>
 
       <!-- 6. Recommendation -->
-      <div class="hla-section" style="margin-bottom:40px;">
-        <div style="font-size:20px;font-weight:700;color:var(--text);border-bottom:2px solid var(--accent);padding-bottom:8px;margin-bottom:16px;">6. Recommendation</div>
+      <div class="hla-section" style="margin-bottom:0;">
+        <div style="font-size:18px;font-weight:700;color:var(--text);border-bottom:2px solid var(--accent);padding-bottom:8px;margin-bottom:16px;">6. Recommendation</div>
         <div style="background:rgba(29,158,117,0.1);border:1px solid rgba(29,158,117,0.35);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:20px;">
-          <div style="font-size:14px;font-weight:600;color:#70d4b0;margin-bottom:8px;">✓ Proceed to detailed design</div>
-          <div style="font-size:13px;color:var(--text-muted);line-height:1.7;">The platform is technically feasible, architecturally sound, and addresses a genuine business need with high revenue impact. The single condition for proceeding is the completion of an API discovery sprint (4 weeks) to assess the actual state of the five legacy system interfaces.</div>
+          <div style="font-size:14px;font-weight:600;color:#70d4b0;margin-bottom:8px;">✓ Proceed — subject to Phase 0 API Discovery Sprint (15–25 pd, 4 weeks)</div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.7;">Architecture is sound, BRD/FRD coverage is strong (8/8 BR, 14/17 FR). Full development commitment should only follow Phase 0 confirmation that API interfaces exist or can be built within the estimated effort.</div>
         </div>
-        <div style="font-size:12px;font-family:var(--font-mono);color:var(--text-dim);margin-bottom:12px;">IMMEDIATE NEXT STEPS</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <div style="font-size:13px;color:var(--text-muted);padding:8px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);">① Request owner confirms go-ahead and budget envelope</div>
-          <div style="font-size:13px;color:var(--text-muted);padding:8px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);">② Demand manager identifies system owners for all 5 legacy systems</div>
-          <div style="font-size:13px;color:var(--text-muted);padding:8px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);">③ Engineering lead confirms team availability and technology stack</div>
-          <div style="font-size:13px;color:var(--text-muted);padding:8px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);">④ API discovery sprint starts — 4 weeks, output: integration feasibility report per system</div>
-          <div style="font-size:13px;color:var(--text-muted);padding:8px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);">⑤ Detailed design document produced based on discovery findings</div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="font-size:13px;color:var(--text-muted);padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);">① Request owner confirms go-ahead and budget envelope (120–210 pd)</div>
+          <div style="font-size:13px;color:var(--text-muted);padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);">② Demand manager identifies technical owners for all 5 legacy systems</div>
+          <div style="font-size:13px;color:var(--text-muted);padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);">③ Engineering lead confirms team availability and technology stack</div>
+          <div style="font-size:13px;color:var(--text-muted);padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);">④ Phase 0 API discovery sprint starts — 4 weeks</div>
+          <div style="font-size:13px;color:var(--text-muted);padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);">⑤ Go/no-go decision at end of Week 4 — confirm Phase 1 start and revised timeline</div>
         </div>
       </div>
 
     </div>
   </div><!-- end panel-hla -->
+
 
 </main>
 
@@ -2839,7 +2813,7 @@
     </div>
     <div class="footer-meta">
       <div class="footer-doc-title">Satellite Capacity Orchestration Platform</div>
-      <div class="footer-doc-sub">Solution Architecture · Draft v1.6.0<br>Orchestration · Beam eligibility · Capacity management</div>
+      <div class="footer-doc-sub">Solution Architecture · Draft v1.7.0<br>Orchestration · Beam eligibility · Capacity management</div>
     </div>
   </div>
 </footer>
