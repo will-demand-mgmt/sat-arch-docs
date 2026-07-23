@@ -948,6 +948,149 @@
     .hla-section { page-break-inside: avoid; margin-bottom: 32px; }
     .hla-cover { page-break-after: always; }
   }
+
+  /* ── Glossary drawer ── */
+  #glossary-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 900;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  #glossary-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  #glossary-drawer {
+    position: fixed;
+    top: 0;
+    right: -420px;
+    width: 400px;
+    height: 100vh;
+    background: var(--bg2);
+    border-left: 1px solid var(--border);
+    z-index: 901;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.3s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: -8px 0 32px rgba(0,0,0,0.4);
+  }
+  #glossary-drawer.open { right: 0; }
+  #glossary-header {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  #glossary-search {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--text);
+    font-family: var(--font);
+    margin: 12px 20px 0;
+    box-sizing: border-box;
+    width: calc(100% - 40px);
+    flex-shrink: 0;
+  }
+  #glossary-search:focus { outline: none; border-color: var(--teal); }
+  #glossary-body {
+    overflow-y: auto;
+    flex: 1;
+    padding: 16px 20px 40px;
+  }
+  .g-letter {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-weight: 700;
+    margin: 20px 0 8px;
+    letter-spacing: 0.08em;
+  }
+  .g-letter:first-child { margin-top: 0; }
+  .g-entry {
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color 0.15s;
+  }
+  .g-entry:hover { border-color: var(--teal); }
+  .g-entry-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .g-term {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .g-badge {
+    font-size: 9px;
+    font-family: var(--font-mono);
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+  }
+  .g-badge-arch    { background: rgba(127,119,221,0.15); color: #afa9ec; }
+  .g-badge-project { background: rgba(59,111,212,0.15);  color: #7aa4f0; }
+  .g-badge-product { background: rgba(29,158,117,0.15);  color: #70d4b0; }
+  .g-short {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+  .g-definition {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 6px;
+  }
+  .g-context {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    border-left: 2px solid var(--border);
+    padding-left: 8px;
+    font-family: var(--font-mono);
+  }
+  #glossary-btn {
+    position: fixed;
+    top: 14px;
+    right: 24px;
+    z-index: 800;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: var(--font);
+    transition: border-color 0.15s, color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  #glossary-btn:hover { border-color: var(--teal); color: var(--teal-light); }
+  @media (max-width: 600px) {
+    #glossary-drawer { width: 100vw; right: -100vw; }
+  }
+
 </style>
 </head>
 <body>
@@ -987,7 +1130,7 @@
   <!-- ════════ TAB: HERO ════════ -->
   <div class="tab-panel active" id="panel-hero" style="grid-column: 1 / -1;">
     <div class="hero-panel">
-      <div class="hero-badge">Solution Architecture · Draft v1.8.2</div>
+      <div class="hero-badge">Solution Architecture · Draft v1.8.3</div>
       <h1 class="hero-title">Satellite Capacity<br><span>Orchestration</span> Platform</h1>
       <p class="hero-lead">A unified orchestration layer that coordinates capacity requests across the full satellite ground segment — from customer order to beam reservation — in a single, auditable workflow.</p>
 
@@ -3496,7 +3639,7 @@
     </div>
     <div class="footer-meta">
       <div class="footer-doc-title">Satellite Capacity Orchestration Platform</div>
-      <div class="footer-doc-sub">Solution Architecture · Draft v1.8.2<br>Orchestration · Beam eligibility · Capacity management</div>
+      <div class="footer-doc-sub">Solution Architecture · Draft v1.8.3<br>Orchestration · Beam eligibility · Capacity management</div>
     </div>
   </div>
 </footer>
@@ -3956,6 +4099,335 @@
     });
   }
 
+const glossaryData = [
+  // ── A ──
+  {
+    term: 'ACID Transaction',
+    category: 'arch',
+    short: 'Atomicity, Consistency, Isolation, Durability',
+    definition: 'A set of four properties that guarantee database transactions are processed reliably. If any step of a transaction fails, the entire transaction is rolled back — leaving the database in its original state.',
+    context: 'In E-711, Amazon RDS (PostgreSQL) uses ACID transactions to guarantee that state machine transitions (e.g. VALIDATING → APPROVED) are atomic — either the full transition completes or nothing changes.'
+  },
+  {
+    term: 'Adapter',
+    category: 'arch',
+    short: 'Integration component isolating a single downstream system',
+    definition: 'A software component responsible exclusively for communicating with one external system. It handles protocol translation, authentication, retry logic, circuit breaking, and error mapping — keeping all integration concerns isolated from business logic.',
+    context: 'E-711 has five adapters: GCRM, CAPI, CP, OSS/FP, and MCM. Each adapter is independently deployable and testable. In Design A they are implemented as AWS Lambda functions.'
+  },
+  {
+    term: 'API Gateway',
+    category: 'arch',
+    short: 'Single public entry point for all external requests',
+    definition: 'A server that acts as the front door for all client requests. It handles authentication, rate limiting, schema validation, and routing before requests reach any business logic.',
+    context: 'In Design A, MuleSoft Anypoint Platform serves as the API Gateway for E-711 — enforcing OAuth2, rate limiting per client, and validating request schemas before forwarding to the Orchestration Engine.'
+  },
+  {
+    term: 'API Discovery',
+    category: 'project',
+    short: 'Phase 0 assessment of legacy system interfaces',
+    definition: 'The process of investigating whether a system exposes a programmatic interface (API), how it is authenticated, what data it provides, and how stable it is. Essential before building integration adapters.',
+    context: 'E-711 Phase 0 requires API discovery on 5 systems: GCRM (IT), CAPI (IT), CP (IT), OSS/Lease Transponder (IT), and MCM (Engineering). The output is an integration feasibility report per system.'
+  },
+  // ── B ──
+  {
+    term: 'BR — Business Requirement',
+    category: 'project',
+    short: 'High-level business objective from the BRD',
+    definition: 'A statement of what the business needs to achieve, expressed without technical detail. Business Requirements define the "what" — not the "how".',
+    context: 'E-711 has 8 Business Requirements (BR-01 to BR-08). All 8 are covered by the proposed architecture. BR-08 (contention prioritization) is partially covered via soft reservation TTL.'
+  },
+  {
+    term: 'BRD — Business Requirements Document',
+    category: 'project',
+    short: 'Document defining what the business needs',
+    definition: 'A formal document that captures the business objectives, scope, stakeholders, and high-level requirements for a project or system. It precedes technical design and drives the FRD.',
+    context: 'The E-711 BRD is "Flexible MHz Phase 3.4 — BRD & FRD v1.0". It defines 8 BR, 17 FR, and 10 NFR that the solution must satisfy.'
+  },
+  // ── C ──
+  {
+    term: 'CAPI — Capacity Inventory',
+    category: 'project',
+    short: 'System tracking real-time satellite beam availability',
+    definition: 'An internal system that maintains a real-time inventory of available satellite capacity per beam. Used during validation to check whether a requested MHz allocation can be satisfied.',
+    context: 'In E-711, the CAPI adapter queries beam-level FWD and RTN capacity in real time during the Validation Engine phase. It also manages soft reservations with TTL to prevent double-booking.'
+  },
+  {
+    term: 'Circuit Breaker',
+    category: 'arch',
+    short: 'Pattern that stops calling a failing system',
+    definition: 'A design pattern that monitors calls to an external system. When failures exceed a threshold, the circuit "opens" and subsequent calls are rejected immediately (without waiting for a timeout), preventing cascade failures.',
+    context: 'Each of the five E-711 adapters implements a circuit breaker. If MCM becomes unresponsive, the circuit breaker prevents the orchestrator from hanging for 15 minutes waiting for timeouts — it fails fast and triggers rollback.'
+  },
+  {
+    term: 'Compensation',
+    category: 'arch',
+    short: 'Undoing a completed step when a later step fails',
+    definition: 'In a saga pattern, compensation is the mechanism for reversing a previously completed step. Since distributed systems cannot use database rollback across services, each step must have a corresponding compensation action that undoes its effect.',
+    context: 'In E-711, if MCM_APPLY fails, the saga runs compensation in reverse order: ROLLBACK_OSS → ROLLBACK_CP. Each adapter must implement its own compensation logic. If compensation also fails, the system enters ROLLBACK_FAILED state.'
+  },
+  {
+    term: 'Concurrency Control',
+    category: 'arch',
+    short: 'Mechanism preventing conflicting simultaneous operations',
+    definition: 'Techniques that ensure multiple simultaneous requests do not corrupt shared state or create conflicting configurations. Common approaches include locks, soft reservations, and tokens.',
+    context: 'E-711 Design A uses soft reservation with TTL — the first approved request reserves capacity in CAPI, preventing others from using the same MHz until the reservation expires. Design B uses a CP Token Manager that serialises all configuration changes.'
+  },
+  {
+    term: 'CP — Capacity Planner',
+    category: 'project',
+    short: 'System managing frequency plans and committed bookings',
+    definition: 'An internal planning system that manages committed capacity bookings and frequency plans over time windows. It knows what capacity is already committed to which customers in which time periods.',
+    context: 'In E-711, the CP adapter updates frequency plans as part of the saga execution step CP_UPDATE. In Design B, CP also acts as the orchestrator — a dual role that creates architectural coupling concerns.'
+  },
+  // ── E ──
+  {
+    term: 'ESM — Enterprise Service Management',
+    category: 'project',
+    short: 'ServiceNow-based ITSM platform',
+    definition: 'The organisation\'s IT Service Management platform, built on ServiceNow. It manages service requests, incidents, tickets, and workflows. It is NOT a transaction manager — it does not guarantee atomicity between downstream systems.',
+    context: 'In Design B, ESM/ServiceNow is used for ticketing and status tracking (equivalent to the AuditEvent entity in Design A). However, its non-transactional nature creates a gap — a ticket marked "Completed" in ESM does not guarantee MCM has actually applied the configuration.'
+  },
+  {
+    term: 'Event Backbone',
+    category: 'arch',
+    short: 'Pub/Sub messaging layer for async event distribution',
+    definition: 'A messaging infrastructure that allows components to publish events and other components to subscribe to them, without direct coupling. Enables asynchronous communication and downstream notification.',
+    context: 'In Design A, the Event Backbone uses Amazon MSK (Kafka managed) for internal streaming and Amazon EventBridge for external routing to Client OSS. Key events: capacity.reserved, request.failed, request.expired.'
+  },
+  // ── F ──
+  {
+    term: 'FR — Functional Requirement',
+    category: 'project',
+    short: 'Specific capability the system must provide',
+    definition: 'A statement describing what the system must do — a specific behaviour or function. Unlike Business Requirements (which say "what" at business level), FRs define specific capabilities at system level.',
+    context: 'E-711 has 17 FR (FR-01 to FR-17). FR-01 to FR-14 are Must Have, FR-15 Should Have, FR-16/17 Nice to Have (deferred). The E-711 HLA v1.1 maps each FR to the solution component that covers it.'
+  },
+  {
+    term: 'FRD — Functional Requirements Document',
+    category: 'project',
+    short: 'Document defining specific system capabilities',
+    definition: 'A document that details what a system must do at a functional level. It expands on the BRD by specifying individual capabilities, acceptance criteria, and priorities (Must Have / Should Have / Nice to Have).',
+    context: 'The E-711 FRD is part of "Flexible MHz Phase 3.4 — BRD & FRD v1.0". It defines 17 FR and 10 NFR with explicit priority levels and acceptance criteria.'
+  },
+  // ── G ──
+  {
+    term: 'GCRM — Salesforce CRM',
+    category: 'project',
+    short: 'Customer contract and entitlement management system',
+    definition: 'The organisation\'s Salesforce-based Customer Relationship Management system. It is the authoritative source for customer contracts, entitlements, beam group configurations, and service tier definitions.',
+    context: 'In E-711, the GCRM adapter is implemented using MuleSoft\'s native Salesforce connector — requiring zero custom integration code. The Validation Engine queries GCRM in real time to verify contract compliance before approving any capacity request.'
+  },
+  // ── H ──
+  {
+    term: 'HLA — High Level Assessment',
+    category: 'project',
+    short: 'Architecture feasibility document for decision-making',
+    definition: 'A document produced by the architecture team that assesses the feasibility of a demand, defines the high-level solution, estimates effort and timeline, identifies risks, and provides a recommendation to proceed or not.',
+    context: 'Two HLAs have been produced: E-711 HLA v1.1 (Flexible MHz Phase 3.4) and E-1178 HLA v1.1 (Customer KVHTS MHz Services MVP). The HLA is the primary input for the Architecture Board go/no-go decision.'
+  },
+  // ── I ──
+  {
+    term: 'Idempotency',
+    category: 'arch',
+    short: 'Safe to call multiple times with the same result',
+    definition: 'A property of an operation meaning that calling it multiple times with the same input produces the same result as calling it once, with no additional side effects. Essential for safe retry in distributed systems.',
+    context: 'In E-711, every API operation uses an idempotency key. The Idempotency store (table in RDS) records each key with a 24h TTL. If a client retries a request due to a network timeout, the cached response is returned — preventing duplicate capacity reservations or MCM configurations.'
+  },
+  // ── M ──
+  {
+    term: 'MCM — Mission Control',
+    category: 'project',
+    short: 'Satellite mission control and configuration system',
+    definition: 'The system responsible for applying configuration changes to the live satellite platform. It manages the operational satellite mission segment, including beam configuration and capacity allocation at the hardware level.',
+    context: 'MCM is the last step in the E-711 saga (MCM_APPLY). It is also the most critical — a failure here triggers rollback of all previous steps. Engineering owns the MCM adapter discovery and integration, given the specialised satellite operations expertise required.'
+  },
+  {
+    term: 'MSK — Amazon Managed Streaming for Kafka',
+    category: 'product',
+    short: 'AWS fully managed Kafka service',
+    definition: 'A fully managed AWS service that runs Apache Kafka without requiring cluster setup, patching, or management. Provides high-throughput event streaming with event replay capability.',
+    context: 'In Design A, Amazon MSK serves as the internal event backbone for E-711 — publishing capacity.reserved, request.failed, and request.expired events. Amazon EventBridge complements it for external routing to Client OSS.'
+  },
+  {
+    term: 'MuleSoft Anypoint',
+    category: 'product',
+    short: 'Integration platform and API gateway',
+    definition: 'An enterprise integration platform by Salesforce that provides API management, integration connectors, and data transformation capabilities. Strong native connector for Salesforce/CRM systems.',
+    context: 'In Design A, MuleSoft serves as both API Gateway (OAuth2, rate limiting, schema validation) and GCRM adapter (native Salesforce connector). It is already in use within the organisation — reducing procurement and onboarding overhead.'
+  },
+  // ── N ──
+  {
+    term: 'NFR — Non-Functional Requirement',
+    category: 'project',
+    short: 'Quality attribute the system must meet',
+    definition: 'A requirement that defines how the system performs rather than what it does. NFRs cover performance, scalability, availability, security, and observability.',
+    context: 'E-711 has 10 NFR. The most critical are NFR-01 (≤15 min E2E execution), NFR-03 (≤5 days plan delivery in Phase 1), NFR-04 (≥99.5% API uptime), and NFR-08 (100% state transitions logged).'
+  },
+  // ── O ──
+  {
+    term: 'Optimistic Locking',
+    category: 'arch',
+    short: 'Concurrency control using a version field',
+    definition: 'A technique where a record includes a version number. When updating, the system checks that the version matches what was read. If another process has already updated the record (incrementing the version), the update is rejected — preventing lost updates without database locks.',
+    context: 'In E-711, the CapacityRequest entity has a version field. Every state transition increments the version. If two processes try to transition the same request simultaneously, one will fail the version check — preventing concurrent state corruption.'
+  },
+  {
+    term: 'Orchestrator',
+    category: 'arch',
+    short: 'Component that coordinates a multi-step workflow',
+    definition: 'A component that manages the execution of a distributed workflow by telling each participant what to do and when. The orchestrator knows the full process and drives each step — contrasted with choreography where each component reacts to events independently.',
+    context: 'In Design A, Temporal Cloud is the orchestrator — it drives the saga steps CP_UPDATE → OSS_GENERATION → MCM_APPLY and triggers compensation on failure. In Design B, the Capacity Planner acts as orchestrator — a role it was not originally designed for.'
+  },
+  {
+    term: 'OSS — Operations Support System',
+    category: 'project',
+    short: 'Frequency planning and transmission plan system',
+    definition: 'The Operations Support System responsible for frequency planning and transmission plan generation. In E-711 context, specifically the OSS Lease Transponder component that generates and delivers transmission plans to customers.',
+    context: 'In E-711, the OSS adapter handles the OSS_GENERATION saga step — generating the updated transmission plan and delivering it to Customer OSS. In E-1178, OSS also delivers the quarterly transmission plan during Phase 1 manual operations.'
+  },
+  // ── R ──
+  {
+    term: 'Rollback',
+    category: 'arch',
+    short: 'Reverting to a previous stable state after failure',
+    definition: 'The process of undoing changes made by a failed operation, returning the system to its last known good state. In distributed systems, rollback is achieved through compensation actions rather than database transactions.',
+    context: 'In E-711, rollback is triggered when any saga execution step fails after retries are exhausted. The orchestrator runs compensation in reverse: ROLLBACK_MCM → ROLLBACK_OSS → ROLLBACK_CP. Status transitions to ROLLED_BACK on success or ROLLBACK_FAILED if compensation also fails.'
+  },
+  // ── S ──
+  {
+    term: 'Saga Pattern',
+    category: 'arch',
+    short: 'Distributed transaction pattern using compensation',
+    definition: 'A design pattern for managing distributed transactions across multiple services. Instead of a single atomic transaction, a saga is a sequence of local transactions. If any step fails, compensation transactions undo the previously completed steps.',
+    context: 'E-711 uses the orchestrated saga variant: Temporal Cloud drives each step (CP_UPDATE → OSS_GENERATION → MCM_APPLY) and knows which steps completed, enabling dynamic compensation (ROLLBACK_MCM → ROLLBACK_OSS → ROLLBACK_CP) in reverse order.'
+  },
+  {
+    term: 'SDD — Solution Design Document',
+    category: 'project',
+    short: 'Detailed technical design document',
+    definition: 'A document produced by the architecture team that describes the complete technical solution — components, data model, state machine, integration flows, implementation principles, and non-functional architecture.',
+    context: 'The E-711 SDD v1.0 has been produced with 9 sections covering all architecture layers, the data model (6 entities), the state machine (13 states), E2E flows, edge cases, and implementation principles.'
+  },
+  {
+    term: 'Soft Reservation',
+    category: 'arch',
+    short: 'Temporary capacity hold with automatic expiry',
+    definition: 'A capacity reservation that is created immediately upon approval but is not committed until the customer explicitly accepts. It has a TTL (Time To Live) — if no acceptance is received within the TTL, the reservation is automatically released.',
+    context: 'In E-711, when a request is APPROVED, a soft reservation is created in CAPI with a TTL (default 5 minutes). This prevents double-booking without requiring distributed locks. If the customer does not accept in time, the request transitions to EXPIRED and the reservation is released.'
+  },
+  {
+    term: 'State Machine',
+    category: 'arch',
+    short: 'Model defining all states and transitions of an entity',
+    definition: 'A model that describes all possible states an entity can be in, and the rules for transitioning between them. Each transition is triggered by a specific event and may have preconditions.',
+    context: 'The E-711 CapacityRequest entity has a state machine with 10 states defined in the BRD/FRD (CREATED, VALIDATING, REJECTED, PARTIAL, APPROVED, EXECUTING, COMPLETED, FAILED, ROLLBACK, ROLLED_BACK) plus 3 architectural extensions (INVALIDATED, ROLLBACK_FAILED, EXPIRED).'
+  },
+  // ── T ──
+  {
+    term: 'Temporal',
+    category: 'product',
+    short: 'Durable workflow execution engine for saga orchestration',
+    definition: 'An open-source workflow orchestration platform that executes workflows as durable code. Workflow state is persisted at every step — if a service crashes, the workflow resumes exactly where it stopped. Used in production by Uber, Netflix, Stripe.',
+    context: 'In Design A, Temporal Cloud (managed AWS) is proposed as the Orchestration Engine for E-711. It natively handles retry with exponential backoff, timeout enforcement (15-min SLA), dynamic compensation, and durable state persistence — all requirements of the E-711 saga.'
+  },
+  {
+    term: 'TTL — Time To Live',
+    category: 'arch',
+    short: 'Maximum lifetime before automatic expiry',
+    definition: 'A duration after which a record, reservation, or token is automatically invalidated. Used to prevent stale data from accumulating and to enforce time boundaries on operations.',
+    context: 'E-711 uses TTL in two contexts: soft reservations in CAPI (default 5 min — released if customer does not accept) and idempotency keys in the Idempotency store (24h — after expiry the same key is treated as a new request).'
+  }
+];
+
+
+  function buildGlossary(filter) {
+    const body = document.getElementById('glossary-body');
+    if (!body) return;
+    const q = (filter || '').toLowerCase();
+    const filtered = q
+      ? glossaryData.filter(e =>
+          e.term.toLowerCase().includes(q) ||
+          e.short.toLowerCase().includes(q) ||
+          e.definition.toLowerCase().includes(q) ||
+          e.context.toLowerCase().includes(q))
+      : glossaryData;
+
+    if (!filtered.length) {
+      body.innerHTML = '<p style="font-size:12px;color:var(--text-dim);font-style:italic;padding:20px 0;">No terms found.</p>';
+      return;
+    }
+
+    const badgeClass = { arch: 'g-badge-arch', project: 'g-badge-project', product: 'g-badge-product' };
+    const badgeLabel = { arch: 'Architecture', project: 'Project', product: 'Product' };
+
+    let html = '';
+    let currentLetter = '';
+    filtered.forEach(e => {
+      const letter = e.term[0].toUpperCase();
+      if (letter !== currentLetter) {
+        currentLetter = letter;
+        html += `<div class="g-letter">${letter}</div>`;
+      }
+      html += `<div class="g-entry">
+        <div class="g-entry-head">
+          <span class="g-term">${e.term}</span>
+          <span class="g-badge ${badgeClass[e.category]}">${badgeLabel[e.category]}</span>
+        </div>
+        <div class="g-short">${e.short}</div>
+        <div class="g-definition">${e.definition}</div>
+        <div class="g-context">E-711 context: ${e.context}</div>
+      </div>`;
+    });
+    body.innerHTML = html;
+  }
+
+  function filterGlossary(val) { buildGlossary(val); }
+
+  function toggleGlossary() {
+    const drawer = document.getElementById('glossary-drawer');
+    const overlay = document.getElementById('glossary-overlay');
+    const isOpen = drawer.classList.contains('open');
+    drawer.classList.toggle('open');
+    overlay.classList.toggle('open');
+    if (!isOpen) {
+      buildGlossary('');
+      const s = document.getElementById('glossary-search');
+      if (s) { s.value = ''; setTimeout(() => s.focus(), 300); }
+    }
+  }
+
+  // Close on ESC
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      const drawer = document.getElementById('glossary-drawer');
+      if (drawer && drawer.classList.contains('open')) toggleGlossary();
+    }
+  });
+
 </script>
+
+<!-- Glossary button -->
+<button id="glossary-btn" onclick="toggleGlossary()" aria-label="Open glossary">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+  Glossary
+</button>
+
+<!-- Glossary overlay -->
+<div id="glossary-overlay" onclick="toggleGlossary()"></div>
+
+<!-- Glossary drawer -->
+<div id="glossary-drawer" role="dialog" aria-label="Glossary">
+  <div id="glossary-header">
+    <div>
+      <div style="font-size:15px;font-weight:700;color:var(--text);">Glossary</div>
+      <div style="font-size:11px;color:var(--text-dim);margin-top:2px;font-family:var(--font-mono);">32 terms · architecture · project · products</div>
+    </div>
+    <button onclick="toggleGlossary()" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:20px;padding:4px;line-height:1;">✕</button>
+  </div>
+  <input id="glossary-search" type="text" placeholder="Search terms..." oninput="filterGlossary(this.value)" autocomplete="off"/>
+  <div id="glossary-body"></div>
+</div>
+
 </body>
 </html>
