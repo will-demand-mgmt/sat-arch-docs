@@ -979,6 +979,7 @@
   <div class="tab" data-tab="flows">E2E flows</div>
   <div class="tab" data-tab="design">Design reference</div>
   <div class="tab" data-tab="hla">HLA</div>
+  <div class="tab" data-tab="solutions">Solutions</div>
 </nav>
 
 <main>
@@ -986,7 +987,7 @@
   <!-- ════════ TAB: HERO ════════ -->
   <div class="tab-panel active" id="panel-hero" style="grid-column: 1 / -1;">
     <div class="hero-panel">
-      <div class="hero-badge">Solution Architecture · Draft v1.7.3</div>
+      <div class="hero-badge">Solution Architecture · Draft v1.8.0</div>
       <h1 class="hero-title">Satellite Capacity<br><span>Orchestration</span> Platform</h1>
       <p class="hero-lead">A unified orchestration layer that coordinates capacity requests across the full satellite ground segment — from customer order to beam reservation — in a single, auditable workflow.</p>
 
@@ -2918,6 +2919,279 @@
 
 
 
+
+  <!-- ════════ TAB: SOLUTIONS ════════ -->
+  <div class="tab-panel" id="panel-solutions" style="max-width:1100px;margin:0 auto;padding:32px 40px 80px;">
+
+    <!-- Header -->
+    <div style="margin-bottom:32px;">
+      <div style="font-size:11px;font-family:var(--font-mono);letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Solution Design</div>
+      <div style="font-size:24px;font-weight:700;color:var(--text);margin-bottom:6px;">Technology Stack Mapping</div>
+      <div style="font-size:13px;color:var(--text-muted);max-width:640px;line-height:1.65;">Product assignments for each architecture layer. Multiple designs will be documented here as technology choices are refined. The System Architecture tab describes the conceptual model — this tab maps it to specific products.</div>
+    </div>
+
+    <!-- Design selector -->
+    <div style="display:flex;gap:8px;margin-bottom:32px;">
+      <div style="padding:8px 18px;background:var(--accent);color:#fff;border-radius:var(--radius);font-size:12px;font-weight:600;cursor:pointer;">Design A — AWS Native Stack</div>
+      <div style="padding:8px 18px;background:var(--bg2);border:1px solid var(--border);color:var(--text-dim);border-radius:var(--radius);font-size:12px;font-weight:500;cursor:default;">Design B — TBD</div>
+      <div style="padding:8px 18px;background:var(--bg2);border:1px solid var(--border);color:var(--text-dim);border-radius:var(--radius);font-size:12px;font-weight:500;cursor:default;">Design C — TBD</div>
+    </div>
+
+    <!-- Design A content -->
+    <div id="sol-design-a">
+
+      <!-- Design A header -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:28px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;">
+        <div><div style="font-size:10px;font-family:var(--font-mono);color:var(--text-dim);margin-bottom:4px;">DESIGN</div><div style="font-size:13px;font-weight:600;color:var(--text);">A — AWS Native Stack</div></div>
+        <div><div style="font-size:10px;font-family:var(--font-mono);color:var(--text-dim);margin-bottom:4px;">VERSION</div><div style="font-size:13px;color:var(--text-muted);">v1.0 — Draft</div></div>
+        <div><div style="font-size:10px;font-family:var(--font-mono);color:var(--text-dim);margin-bottom:4px;">STATUS</div><div style="font-size:13px;color:#fac775;">Under review</div></div>
+        <div><div style="font-size:10px;font-family:var(--font-mono);color:var(--text-dim);margin-bottom:4px;">CLOUD</div><div style="font-size:13px;color:var(--text-muted);">AWS (primary)</div></div>
+      </div>
+
+      <!-- Architecture diagram -->
+      <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:16px;">Architecture Diagram</div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:28px;overflow:auto;">
+        <svg viewBox="0 0 780 720" xmlns="http://www.w3.org/2000/svg" font-family="'Inter',sans-serif" style="width:100%;display:block;">
+          <defs>
+            <marker id="sarr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#4a5570" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+            <marker id="sarr-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#1d9e75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+          </defs>
+
+          <!-- External clients -->
+          <rect x="190" y="10" width="400" height="52" rx="8" fill="#0d1824" stroke="#2a3d5a" stroke-width="1"/>
+          <text x="390" y="32" text-anchor="middle" font-size="11" fill="#7a8aaa" font-family="monospace" letter-spacing="0.06em">EXTERNAL CLIENTS</text>
+          <text x="390" y="50" text-anchor="middle" font-size="11" fill="#4a5a7a">Customer OSS / Partner systems — REST API (OAuth2)</text>
+
+          <!-- Arrow: clients → MuleSoft -->
+          <line x1="390" y1="62" x2="390" y2="90" stroke="#4a5570" stroke-width="1" marker-end="url(#sarr)"/>
+          <text x="400" y="80" font-size="9" fill="#4a5570">Bearer token</text>
+
+          <!-- Layer 1: MuleSoft API Management -->
+          <rect x="60" y="90" width="660" height="80" rx="10" fill="#0d1a2e" stroke="#1e3d6e" stroke-width="1.5"/>
+          <rect x="60" y="90" width="660" height="28" rx="10" fill="#1a3358"/>
+          <rect x="60" y="108" width="660" height="10" fill="#1a3358"/>
+          <text x="390" y="108" text-anchor="middle" font-size="12" font-weight="600" fill="#7aa4f0">API Management</text>
+          <!-- MuleSoft badge -->
+          <rect x="290" y="125" width="200" height="32" rx="6" fill="rgba(59,111,212,0.15)" stroke="rgba(59,111,212,0.4)" stroke-width="1"/>
+          <text x="390" y="138" text-anchor="middle" font-size="11" font-weight="600" fill="#7aa4f0">MuleSoft Anypoint Platform</text>
+          <text x="390" y="151" text-anchor="middle" font-size="9" fill="#4a6090">OAuth2 · Rate limiting · Schema validation · Routing</text>
+
+          <!-- Arrow: MuleSoft → Temporal -->
+          <line x1="390" y1="170" x2="390" y2="200" stroke="#4a5570" stroke-width="1" marker-end="url(#sarr)"/>
+
+          <!-- Layer 2: Orchestration & Domain -->
+          <rect x="60" y="200" width="660" height="200" rx="10" fill="#100d2a" stroke="#3d3580" stroke-width="1.5"/>
+          <rect x="60" y="200" width="660" height="28" rx="10" fill="#2a2060"/>
+          <rect x="60" y="218" width="660" height="10" fill="#2a2060"/>
+          <text x="390" y="218" text-anchor="middle" font-size="12" font-weight="600" fill="#c0b8f8">Orchestration &amp; Domain Layer</text>
+
+          <!-- Temporal box -->
+          <rect x="75" y="240" width="200" height="145" rx="8" fill="#0d1020" stroke="#4a4298" stroke-width="1"/>
+          <text x="175" y="258" text-anchor="middle" font-size="11" font-weight="600" fill="#c0b8f8">Orchestration Engine</text>
+          <rect x="85" y="265" width="180" height="28" rx="5" fill="rgba(127,119,221,0.2)" stroke="rgba(127,119,221,0.4)" stroke-width="1"/>
+          <text x="175" y="279" text-anchor="middle" font-size="10" font-weight="600" fill="#afa9ec">Temporal Cloud</text>
+          <text x="175" y="292" text-anchor="middle" font-size="8" fill="#6a62b0">(AWS managed)</text>
+          <text x="85" y="312" font-size="9" fill="#5a52a0">① Saga state machine</text>
+          <text x="85" y="326" font-size="9" fill="#5a52a0">② Retry + exponential backoff</text>
+          <text x="85" y="340" font-size="9" fill="#5a52a0">③ Compensation (rollback)</text>
+          <text x="85" y="354" font-size="9" fill="#5a52a0">④ Timeout enforcement (15 min)</text>
+          <text x="85" y="368" font-size="9" fill="#5a52a0">⑤ Durable workflow persistence</text>
+
+          <!-- Validation Engine box -->
+          <rect x="295" y="240" width="200" height="145" rx="8" fill="#0d1020" stroke="#4a4298" stroke-width="1"/>
+          <text x="395" y="258" text-anchor="middle" font-size="11" font-weight="600" fill="#c0b8f8">Validation Engine</text>
+          <rect x="305" y="265" width="180" height="28" rx="5" fill="rgba(127,119,221,0.2)" stroke="rgba(127,119,221,0.4)" stroke-width="1"/>
+          <text x="395" y="279" text-anchor="middle" font-size="10" font-weight="600" fill="#afa9ec">AWS Lambda / ECS</text>
+          <text x="395" y="292" text-anchor="middle" font-size="8" fill="#6a62b0">(containerised microservice)</text>
+          <text x="305" y="312" font-size="9" fill="#5a52a0">Contract check (GCRM)</text>
+          <text x="305" y="326" font-size="9" fill="#5a52a0">Beam eligibility (OSS)</text>
+          <text x="305" y="340" font-size="9" fill="#5a52a0">Capacity check (CAPI)</text>
+
+          <!-- Decision Engine box -->
+          <rect x="515" y="240" width="190" height="145" rx="8" fill="#0d1020" stroke="#4a4298" stroke-width="1"/>
+          <text x="610" y="258" text-anchor="middle" font-size="11" font-weight="600" fill="#c0b8f8">Decision Engine</text>
+          <rect x="525" y="265" width="170" height="28" rx="5" fill="rgba(127,119,221,0.2)" stroke="rgba(127,119,221,0.4)" stroke-width="1"/>
+          <text x="610" y="279" text-anchor="middle" font-size="10" font-weight="600" fill="#afa9ec">AWS Lambda / ECS</text>
+          <text x="610" y="292" text-anchor="middle" font-size="8" fill="#6a62b0">(containerised microservice)</text>
+          <text x="525" y="312" font-size="9" fill="#5a52a0">APPROVED / PARTIAL</text>
+          <text x="525" y="326" font-size="9" fill="#5a52a0">REJECTED + reason code</text>
+          <text x="525" y="340" font-size="9" fill="#5a52a0">Alt. proposal logic</text>
+
+          <!-- Arrows within domain layer -->
+          <line x1="275" y1="312" x2="295" y2="312" stroke="#4a4298" stroke-width="0.8" marker-end="url(#sarr)"/>
+          <line x1="495" y1="312" x2="515" y2="312" stroke="#4a4298" stroke-width="0.8" marker-end="url(#sarr)"/>
+
+          <!-- Arrows: domain → state+event -->
+          <line x1="175" y1="400" x2="175" y2="430" stroke="#4a5570" stroke-width="1" marker-end="url(#sarr)"/>
+          <line x1="610" y1="400" x2="610" y2="430" stroke="#4a5570" stroke-width="1" marker-end="url(#sarr)"/>
+
+          <!-- Layer 3: State & Data + Event Backbone -->
+          <rect x="60" y="430" width="310" height="100" rx="10" fill="#1a0a00" stroke="#7a4010" stroke-width="1.5"/>
+          <text x="215" y="452" text-anchor="middle" font-size="12" font-weight="600" fill="#e0a060">State &amp; Data</text>
+          <rect x="75" y="460" width="280" height="28" rx="5" fill="rgba(186,117,23,0.2)" stroke="rgba(186,117,23,0.4)" stroke-width="1"/>
+          <text x="215" y="474" text-anchor="middle" font-size="10" font-weight="600" fill="#fac775">Amazon RDS (PostgreSQL)</text>
+          <text x="215" y="487" text-anchor="middle" font-size="8" fill="#906830">Multi-AZ · Read replicas</text>
+          <text x="75" y="505" font-size="9" fill="#786020">CapacityRequest · ExecutionStep · AuditEvent · Idempotency</text>
+          <text x="75" y="518" font-size="9" fill="#786020">Optimistic locking (version field) · ACID transactions</text>
+
+          <rect x="410" y="430" width="310" height="100" rx="10" fill="#1a1000" stroke="#7a6010" stroke-width="1.5"/>
+          <text x="565" y="452" text-anchor="middle" font-size="12" font-weight="600" fill="#e8c060">Event Backbone</text>
+          <rect x="425" y="460" width="130" height="28" rx="5" fill="rgba(186,117,23,0.2)" stroke="rgba(186,117,23,0.4)" stroke-width="1"/>
+          <text x="490" y="474" text-anchor="middle" font-size="10" font-weight="600" fill="#fac775">Amazon MSK</text>
+          <text x="490" y="487" text-anchor="middle" font-size="8" fill="#906830">Kafka managed</text>
+          <rect x="565" y="460" width="140" height="28" rx="5" fill="rgba(186,117,23,0.2)" stroke="rgba(186,117,23,0.4)" stroke-width="1"/>
+          <text x="635" y="474" text-anchor="middle" font-size="10" font-weight="600" fill="#fac775">EventBridge</text>
+          <text x="635" y="487" text-anchor="middle" font-size="8" fill="#906830">External routing</text>
+          <text x="425" y="505" font-size="9" fill="#786020">capacity.reserved · request.failed · request.expired</text>
+          <text x="425" y="518" font-size="9" fill="#786020">Pub/Sub · async downstream notification</text>
+
+          <!-- Arrows: state+event → adapters -->
+          <line x1="215" y1="530" x2="215" y2="560" stroke="#4a5570" stroke-width="1" marker-end="url(#sarr)"/>
+          <line x1="565" y1="530" x2="565" y2="560" stroke="#4a5570" stroke-width="1" marker-end="url(#sarr)"/>
+
+          <!-- Layer 4: Integration Adapters -->
+          <rect x="60" y="560" width="660" height="110" rx="10" fill="#0a1a10" stroke="#1a6028" stroke-width="1.5"/>
+          <rect x="60" y="560" width="660" height="28" rx="10" fill="#0e4028"/>
+          <rect x="60" y="578" width="660" height="10" fill="#0e4028"/>
+          <text x="390" y="578" text-anchor="middle" font-size="12" font-weight="600" fill="#70d090">Integration Layer — Adapters</text>
+
+          <!-- GCRM adapter - MuleSoft -->
+          <rect x="75" y="595" width="118" height="60" rx="6" fill="#0a1a38" stroke="#1e3d6e" stroke-width="1"/>
+          <text x="134" y="612" text-anchor="middle" font-size="10" font-weight="600" fill="#7aa4f0">GCRM</text>
+          <text x="134" y="625" text-anchor="middle" font-size="8" fill="#4a6090">Salesforce</text>
+          <rect x="82" y="632" width="104" height="16" rx="3" fill="rgba(59,111,212,0.2)" stroke="rgba(59,111,212,0.3)" stroke-width="0.5"/>
+          <text x="134" y="643" text-anchor="middle" font-size="8" fill="#7aa4f0">MuleSoft connector</text>
+
+          <!-- CAPI adapter - Lambda -->
+          <rect x="203" y="595" width="118" height="60" rx="6" fill="#0a1a10" stroke="#1a6028" stroke-width="1"/>
+          <text x="262" y="612" text-anchor="middle" font-size="10" font-weight="600" fill="#70d090">CAPI</text>
+          <text x="262" y="625" text-anchor="middle" font-size="8" fill="#3a7040">Capacity Inventory</text>
+          <rect x="210" y="632" width="104" height="16" rx="3" fill="rgba(29,158,117,0.2)" stroke="rgba(29,158,117,0.3)" stroke-width="0.5"/>
+          <text x="262" y="643" text-anchor="middle" font-size="8" fill="#70d4b0">AWS Lambda</text>
+
+          <!-- CP adapter - Lambda -->
+          <rect x="331" y="595" width="118" height="60" rx="6" fill="#0a1a10" stroke="#1a6028" stroke-width="1"/>
+          <text x="390" y="612" text-anchor="middle" font-size="10" font-weight="600" fill="#70d090">CP</text>
+          <text x="390" y="625" text-anchor="middle" font-size="8" fill="#3a7040">Capacity Planner</text>
+          <rect x="338" y="632" width="104" height="16" rx="3" fill="rgba(29,158,117,0.2)" stroke="rgba(29,158,117,0.3)" stroke-width="0.5"/>
+          <text x="390" y="643" text-anchor="middle" font-size="8" fill="#70d4b0">AWS Lambda</text>
+
+          <!-- OSS adapter - Lambda -->
+          <rect x="459" y="595" width="118" height="60" rx="6" fill="#0a1a10" stroke="#1a6028" stroke-width="1"/>
+          <text x="518" y="612" text-anchor="middle" font-size="10" font-weight="600" fill="#70d090">OSS / FP</text>
+          <text x="518" y="625" text-anchor="middle" font-size="8" fill="#3a7040">Freq. Planning</text>
+          <rect x="466" y="632" width="104" height="16" rx="3" fill="rgba(29,158,117,0.2)" stroke="rgba(29,158,117,0.3)" stroke-width="0.5"/>
+          <text x="518" y="643" text-anchor="middle" font-size="8" fill="#70d4b0">AWS Lambda</text>
+
+          <!-- MCM adapter - Lambda -->
+          <rect x="587" y="595" width="118" height="60" rx="6" fill="#0a1a10" stroke="#1a6028" stroke-width="1"/>
+          <text x="646" y="612" text-anchor="middle" font-size="10" font-weight="600" fill="#70d090">MCM</text>
+          <text x="646" y="625" text-anchor="middle" font-size="8" fill="#3a7040">Mission Segment</text>
+          <rect x="594" y="632" width="104" height="16" rx="3" fill="rgba(29,158,117,0.2)" stroke="rgba(29,158,117,0.3)" stroke-width="0.5"/>
+          <text x="646" y="643" text-anchor="middle" font-size="8" fill="#70d4b0">AWS Lambda</text>
+
+          <!-- Arrow: adapters → downstream -->
+          <line x1="390" y1="670" x2="390" y2="695" stroke="#4a5570" stroke-width="1" marker-end="url(#sarr)"/>
+
+          <!-- Downstream systems -->
+          <rect x="60" y="695" width="660" height="20" rx="6" fill="#111827" stroke="#2a3550" stroke-width="0.8"/>
+          <text x="390" y="709" text-anchor="middle" font-size="10" fill="#4a5570" font-family="monospace" letter-spacing="0.04em">DOWNSTREAM SYSTEMS — GCRM · CAPI · CP · OSS · MCM — independent systems of record</text>
+
+          <!-- Legend -->
+          <rect x="60" y="0" width="120" height="8" rx="2" fill="transparent"/>
+          <!-- Product badges legend -->
+          <rect x="500" y="96" width="100" height="14" rx="3" fill="rgba(59,111,212,0.15)" stroke="rgba(59,111,212,0.3)" stroke-width="0.8"/>
+          <text x="550" y="107" text-anchor="middle" font-size="8" fill="#7aa4f0">MuleSoft</text>
+          <rect x="610" y="96" width="100" height="14" rx="3" fill="rgba(127,119,221,0.15)" stroke="rgba(127,119,221,0.3)" stroke-width="0.8"/>
+          <text x="660" y="107" text-anchor="middle" font-size="8" fill="#afa9ec">Temporal / Lambda</text>
+        </svg>
+      </div>
+
+      <!-- Product mapping table -->
+      <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:16px;">Product Mapping</div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:28px;">
+        <div style="display:grid;grid-template-columns:180px 200px 1fr 120px;gap:0;">
+          <!-- Header -->
+          <div style="padding:12px 16px;background:var(--bg3);font-size:11px;font-family:var(--font-mono);color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);">Layer</div>
+          <div style="padding:12px 16px;background:var(--bg3);font-size:11px;font-family:var(--font-mono);color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);">Product</div>
+          <div style="padding:12px 16px;background:var(--bg3);font-size:11px;font-family:var(--font-mono);color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);">Rationale</div>
+          <div style="padding:12px 16px;background:var(--bg3);font-size:11px;font-family:var(--font-mono);color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);">Status</div>
+          <!-- Row 1 -->
+          <div style="padding:12px 16px;font-size:12px;font-weight:600;color:var(--text);border-bottom:1px solid var(--border);">API Management</div>
+          <div style="padding:12px 16px;font-size:12px;color:#7aa4f0;border-bottom:1px solid var(--border);">MuleSoft Anypoint</div>
+          <div style="padding:12px 16px;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border);">Already in-house. Native Salesforce/GCRM connector. OAuth2, rate limiting, schema validation, routing out-of-the-box.</div>
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);"><span style="font-size:11px;font-family:var(--font-mono);color:#70d4b0;">Confirmed</span></div>
+          <!-- Row 2 -->
+          <div style="padding:12px 16px;font-size:12px;font-weight:600;color:var(--text);border-bottom:1px solid var(--border);">Orchestration Engine</div>
+          <div style="padding:12px 16px;font-size:12px;color:#afa9ec;border-bottom:1px solid var(--border);">Temporal Cloud (AWS)</div>
+          <div style="padding:12px 16px;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border);">Purpose-built for saga with dynamic compensation. Durable workflow persistence — survives crashes and resumes from exact step. Retry + timeout management native.</div>
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);"><span style="font-size:11px;font-family:var(--font-mono);color:#fac775;">Proposed</span></div>
+          <!-- Row 3 -->
+          <div style="padding:12px 16px;font-size:12px;font-weight:600;color:var(--text);border-bottom:1px solid var(--border);">Validation Engine</div>
+          <div style="padding:12px 16px;font-size:12px;color:#70d4b0;border-bottom:1px solid var(--border);">AWS Lambda / ECS</div>
+          <div style="padding:12px 16px;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border);">Stateless microservice invoked as Temporal activity. Parallel execution of contract, beam, capacity checks. Scales independently.</div>
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);"><span style="font-size:11px;font-family:var(--font-mono);color:#fac775;">Proposed</span></div>
+          <!-- Row 4 -->
+          <div style="padding:12px 16px;font-size:12px;font-weight:600;color:var(--text);border-bottom:1px solid var(--border);">Decision Engine</div>
+          <div style="padding:12px 16px;font-size:12px;color:#70d4b0;border-bottom:1px solid var(--border);">AWS Lambda / ECS</div>
+          <div style="padding:12px 16px;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border);">Stateless microservice invoked as Temporal activity. APPROVED / PARTIAL / REJECTED logic. Alternative proposal computation.</div>
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);"><span style="font-size:11px;font-family:var(--font-mono);color:#fac775;">Proposed</span></div>
+          <!-- Row 5 -->
+          <div style="padding:12px 16px;font-size:12px;font-weight:600;color:var(--text);border-bottom:1px solid var(--border);">State &amp; Data</div>
+          <div style="padding:12px 16px;font-size:12px;color:#fac775;border-bottom:1px solid var(--border);">Amazon RDS PostgreSQL</div>
+          <div style="padding:12px 16px;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border);">ACID transactions for state machine. Optimistic locking via version field. Multi-AZ for HA. CapacityRequest, ExecutionStep, AuditEvent, Idempotency.</div>
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);"><span style="font-size:11px;font-family:var(--font-mono);color:#fac775;">Proposed</span></div>
+          <!-- Row 6 -->
+          <div style="padding:12px 16px;font-size:12px;font-weight:600;color:var(--text);border-bottom:1px solid var(--border);">Event Backbone</div>
+          <div style="padding:12px 16px;font-size:12px;color:#fac775;border-bottom:1px solid var(--border);">Amazon MSK + EventBridge</div>
+          <div style="padding:12px 16px;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border);">MSK (Kafka managed) for internal event streaming. EventBridge for external routing to Client OSS and downstream consumers. Both fully managed on AWS.</div>
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);"><span style="font-size:11px;font-family:var(--font-mono);color:#fac775;">Proposed</span></div>
+          <!-- Row 7 -->
+          <div style="padding:12px 16px;font-size:12px;font-weight:600;color:var(--text);border-bottom:1px solid var(--border);">Adapter — GCRM</div>
+          <div style="padding:12px 16px;font-size:12px;color:#7aa4f0;border-bottom:1px solid var(--border);">MuleSoft (native connector)</div>
+          <div style="padding:12px 16px;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border);">Salesforce native connector in MuleSoft — zero custom integration code. Contract data, entitlements, beam groups.</div>
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);"><span style="font-size:11px;font-family:var(--font-mono);color:#70d4b0;">Confirmed</span></div>
+          <!-- Row 8 -->
+          <div style="padding:12px 16px;font-size:12px;font-weight:600;color:var(--text);border-bottom:1px solid var(--border);">Adapters — CAPI, CP, OSS, MCM</div>
+          <div style="padding:12px 16px;font-size:12px;color:#70d4b0;border-bottom:1px solid var(--border);">AWS Lambda (custom)</div>
+          <div style="padding:12px 16px;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border);">Custom adapters per legacy system. Each Lambda handles protocol translation, retry, circuit breaker, error mapping. Invoked as Temporal activities.</div>
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);"><span style="font-size:11px;font-family:var(--font-mono);color:#e07070;">TBD — pending API discovery</span></div>
+          <!-- Row 9 -->
+          <div style="padding:12px 16px;font-size:12px;font-weight:600;color:var(--text);">Monitoring &amp; Observability</div>
+          <div style="padding:12px 16px;font-size:12px;color:#70d4b0;">AWS CloudWatch + Temporal UI</div>
+          <div style="padding:12px 16px;font-size:12px;color:var(--text-muted);">CloudWatch for infrastructure metrics and alerting. Temporal Web UI for workflow execution visibility, saga state inspection, failure debugging.</div>
+          <div style="padding:12px 16px;"><span style="font-size:11px;font-family:var(--font-mono);color:#fac775;">Proposed</span></div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:16px;">Design Notes &amp; Open Points</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="padding:12px 16px;background:rgba(186,117,23,0.08);border:1px solid rgba(186,117,23,0.25);border-left:3px solid #fac775;border-radius:var(--radius);">
+          <div style="font-size:11px;font-family:var(--font-mono);color:#fac775;margin-bottom:4px;">PENDING — API Discovery</div>
+          <div style="font-size:12px;color:var(--text-muted);">Adapter design for CAPI, CP, OSS, MCM is pending Phase 0 API discovery findings. Lambda is the proposed runtime but the integration complexity (S/M/L/XL) will be confirmed post-discovery.</div>
+        </div>
+        <div style="padding:12px 16px;background:rgba(186,117,23,0.08);border:1px solid rgba(186,117,23,0.25);border-left:3px solid #fac775;border-radius:var(--radius);">
+          <div style="font-size:11px;font-family:var(--font-mono);color:#fac775;margin-bottom:4px;">PENDING — Internal tooling audit</div>
+          <div style="font-size:12px;color:var(--text-muted);">Organisation may already have tools that could replace Temporal or MSK. Design B will be defined once internal tooling inventory is available.</div>
+        </div>
+        <div style="padding:12px 16px;background:rgba(59,111,212,0.06);border:1px solid rgba(59,111,212,0.2);border-left:3px solid #7aa4f0;border-radius:var(--radius);">
+          <div style="font-size:11px;font-family:var(--font-mono);color:#7aa4f0;margin-bottom:4px;">NOTE — MuleSoft vs Temporal scope</div>
+          <div style="font-size:12px;color:var(--text-muted);">MuleSoft handles API management and GCRM integration. Temporal handles saga orchestration. These are complementary, not competing — MuleSoft orchestrates integrations, Temporal orchestrates distributed transactions.</div>
+        </div>
+        <div style="padding:12px 16px;background:rgba(29,158,117,0.06);border:1px solid rgba(29,158,117,0.2);border-left:3px solid #70d4b0;border-radius:var(--radius);">
+          <div style="font-size:11px;font-family:var(--font-mono);color:#70d4b0;margin-bottom:4px;">ADVANTAGE — Fully managed stack</div>
+          <div style="font-size:12px;color:var(--text-muted);">All components in Design A are available as fully managed AWS services (MSK, RDS, Lambda, EventBridge) or managed cloud services (Temporal Cloud, MuleSoft Anypoint). Minimal operational overhead — no self-hosted infrastructure to maintain.</div>
+        </div>
+      </div>
+
+    </div><!-- end sol-design-a -->
+  </div><!-- end panel-solutions -->
+
 </main>
 
 <footer>
@@ -2932,7 +3206,7 @@
     </div>
     <div class="footer-meta">
       <div class="footer-doc-title">Satellite Capacity Orchestration Platform</div>
-      <div class="footer-doc-sub">Solution Architecture · Draft v1.7.3<br>Orchestration · Beam eligibility · Capacity management</div>
+      <div class="footer-doc-sub">Solution Architecture · Draft v1.8.0<br>Orchestration · Beam eligibility · Capacity management</div>
     </div>
   </div>
 </footer>
