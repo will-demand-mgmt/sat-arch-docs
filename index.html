@@ -976,8 +976,10 @@
     flex-direction: column;
     transition: right 0.3s cubic-bezier(0.4,0,0.2,1);
     box-shadow: -8px 0 32px rgba(0,0,0,0.4);
+    overflow: hidden;
   }
-  #glossary-drawer.open { right: 0; }
+  #glossary-drawer { right: -420px; visibility: hidden; }
+  #glossary-drawer.open { right: 0; visibility: visible; }
   #glossary-header {
     padding: 20px 20px 16px;
     border-bottom: 1px solid var(--border);
@@ -3642,6 +3644,7 @@
       <div class="footer-doc-sub">Solution Architecture · Draft v1.8.3<br>Orchestration · Beam eligibility · Capacity management</div>
     </div>
   </div>
+
 </footer>
 
 <script>
@@ -4394,6 +4397,9 @@ const glossaryData = [
       buildGlossary('');
       const s = document.getElementById('glossary-search');
       if (s) { s.value = ''; setTimeout(() => s.focus(), 300); }
+    } else {
+      const body = document.getElementById('glossary-body');
+      if (body) body.innerHTML = '';
     }
   }
 
