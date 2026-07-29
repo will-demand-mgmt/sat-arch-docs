@@ -705,7 +705,8 @@
   @media (max-width: 800px) {
     .flows-grid { grid-template-columns: 1fr; }
     .flow-card.expanded { grid-column: 1; }
-  
+  }
+
   /* ── E2E Flows ── */
   .flows-panel {
     max-width: 1100px;
@@ -972,17 +973,20 @@
     background: var(--bg2);
     border-left: 1px solid var(--border);
     z-index: 901;
-    display: none;
+    display: flex;
     flex-direction: column;
     box-shadow: -8px 0 32px rgba(0,0,0,0.4);
     overflow: hidden;
-    transform: translateX(100%);
-    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    transform: translateX(110%);
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0.3s;
   }
   #glossary-drawer.open {
-    display: flex;
     transform: translateX(0);
     visibility: visible;
+    pointer-events: all;
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0s;
   }
   #glossary-header {
     padding: 20px 20px 16px;
@@ -1094,7 +1098,7 @@
   }
   #glossary-btn:hover { border-color: var(--teal); color: var(--teal-light); }
   @media (max-width: 600px) {
-    #glossary-drawer { width: 100vw; right: -100vw; }
+    #glossary-drawer { width: 100vw; }
   }
 
 </style>
@@ -1136,7 +1140,7 @@
   <!-- ════════ TAB: HERO ════════ -->
   <div class="tab-panel active" id="panel-hero" style="grid-column: 1 / -1;">
     <div class="hero-panel">
-      <div class="hero-badge">Solution Architecture · Draft v1.8.3</div>
+      <div class="hero-badge">Solution Architecture · Draft v1.8.7</div>
       <h1 class="hero-title">Satellite Capacity<br><span>Orchestration</span> Platform</h1>
       <p class="hero-lead">A unified orchestration layer that coordinates capacity requests across the full satellite ground segment — from customer order to beam reservation — in a single, auditable workflow.</p>
 
@@ -3645,7 +3649,7 @@
     </div>
     <div class="footer-meta">
       <div class="footer-doc-title">Satellite Capacity Orchestration Platform</div>
-      <div class="footer-doc-sub">Solution Architecture · Draft v1.8.3<br>Orchestration · Beam eligibility · Capacity management</div>
+      <div class="footer-doc-sub">Solution Architecture · Draft v1.8.7<br>Orchestration · Beam eligibility · Capacity management</div>
     </div>
   </div>
 
@@ -4395,21 +4399,12 @@ const glossaryData = [
     const drawer = document.getElementById('glossary-drawer');
     const overlay = document.getElementById('glossary-overlay');
     const isOpen = drawer.classList.contains('open');
+    drawer.classList.toggle('open');
+    overlay.classList.toggle('open');
     if (!isOpen) {
-      drawer.style.display = 'flex';
-      requestAnimationFrame(() => drawer.classList.add('open'));
-      overlay.classList.add('open');
       buildGlossary('');
       const s = document.getElementById('glossary-search');
       if (s) { s.value = ''; setTimeout(() => s.focus(), 300); }
-    } else {
-      drawer.classList.remove('open');
-      overlay.classList.remove('open');
-      setTimeout(() => {
-        drawer.style.display = 'none';
-        const body = document.getElementById('glossary-body');
-        if (body) body.innerHTML = '';
-      }, 300);
     }
   }
 
